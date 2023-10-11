@@ -14,64 +14,96 @@ library(broom)
 
 ## 2. Data
 
-```{r data-set-assignment}
+```{r data-set-assignment-2011}
 library(readr)
 tri_data_2011 <- read_csv("../data/2011_us.csv")
-tri_data_2011 <- tri_data_2011 %>%
-  select()
+tri_data_2011 <- tri_data_2011 
+```
 
+```{r data-set-assignment-2012}
 library(readr)
 tri_data_2012 <- read_csv("../data/2012_us.csv")
-tri_data_2012 <-  tri_data_2012 %>% 
-  select()
+tri_data_2012 <-  tri_data_2012
+```
 
-library(readr)
+``` {r data-set-assignment-2013}
+library(readr) 
 tri_data_2013 <- read_csv("../data/2013_us.csv")
-tri_data_2013 <- tri_data_2013 %>% 
-  select()
+tri_data_2013 <- tri_data_2013
+```
 
+``` {r data-set-assignment-2014}
 library(readr)
 tri_data_2014 <- read_csv("../data/2014_us.csv")
-tri_data_2014 <- tri_data_2014 %>% 
-  select()
+tri_data_2014 <- tri_data_2014
+```
 
+```{r data-set-assignment-2015}
 library(readr)
 tri_data_2015 <- read_csv("../data/2015_us.csv")
-tri_data_2015 <- tri_data_2015 %>% 
-  select()
+tri_data_2015 <- tri_data_2015
+```
 
+```{r data-set-assignment-2016}
 library(readr)
 tri_data_2016 <- read_csv("../data/2016_us.csv")
-tri_data_2016 <- tri_data_2016 %>% 
-  select()
+tri_data_2016 <- tri_data_2016
+```
 
+```{r data-set-assignment-2017}
 library(readr)
 tri_data_2017 <- read_csv("../data/2017_us.csv")
-tri_data_2017 <- tri_data_2017 %>% 
-  select()
+tri_data_2017 <- tri_data_2017
+```
 
+```{r data-set-assignment-2018}
 library(readr)
 tri_data_2018 <- read_csv("../data/2018_us.csv")
-tri_data_2018 <- tri_data_2018 %>% 
-  select()
+tri_data_2018 <- tri_data_2018
+```
 
+```{r data-set-assignment-2019}
 library(readr)
 tri_data_2019 <- read_csv("../data/2019_us.csv")
-tri_data_2019 <- tri_data_2019 %>% 
-  select()
+tri_data_2019 <- tri_data_2019
+```
 
+```{r data-set-assignment-2020}
 library(readr)
 tri_data_2020 <- read_csv("../data/2020_us.csv")
-tri_data_2020 <- tri_data_2020 %>% 
-  select()
+tri_data_2020 <- tri_data_2020
+```
 
+```{r data-set-assignment-2021}
 library(readr)
 tri_data_2021 <- read_csv("../data/2021_us.csv")
-tri_data_2021 <- tri_data_2021 %>% 
-  select()
+tri_data_2021 <- tri_data_2021
+```
+
+```{r distinct-facilities-2011}
+tri_data_2011 %>%
+  select("4. FACILITY NAME") %>% 
+  distinct()
 
 ```
 
+```{r distinct-chemicals-2011}
+tri_data_2011 %>% 
+  select("34. CHEMICAL") %>% 
+  distinct()
+```
+
+```{r distinct-industry-sector-2011}
+tri_data_2011 %>% 
+  select("20. INDUSTRY SECTOR") %>% 
+  distinct()
+```
+
+```{r distinct-city-county-state-2011}
+tri_data_2011 %>% 
+  select("6. CITY", "7. COUNTY", "8. ST") %>% 
+  distinct()
+```
 
 
 ## 3. Ethics review
