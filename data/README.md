@@ -14,9 +14,16 @@ using the following format.
 
 ## 2011_us.csv
 
--
-- 
--
+- 'YEAR': 
+- 'TRIFD':
+- 'FRS ID':
+- 'FACILITY NAME':
+- 'STREET ADDRESS':
+- 'CITY':
+- 'ST':
+- 'ZIP':
+- 'INDUSTRY SECTOR':
+- '
 
 ## 2012_us.csv
 
