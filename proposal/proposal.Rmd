@@ -14,12 +14,64 @@ library(broom)
 
 ## 2. Data
 
-```{r}
+```{r data-set-assignment}
 library(readr)
-X2011_us <- read_csv("../data/2011_us.csv")
-X2011_us <- X2011_us %>%
+tri_data_2011 <- read_csv("../data/2011_us.csv")
+tri_data_2011 <- tri_data_2011 %>%
   select()
+
+library(readr)
+tri_data_2012 <- read_csv("../data/2012_us.csv")
+tri_data_2012 <-  tri_data_2012 %>% 
+  select()
+
+library(readr)
+tri_data_2013 <- read_csv("../data/2013_us.csv")
+tri_data_2013 <- tri_data_2013 %>% 
+  select()
+
+library(readr)
+tri_data_2014 <- read_csv("../data/2014_us.csv")
+tri_data_2014 <- tri_data_2014 %>% 
+  select()
+
+library(readr)
+tri_data_2015 <- read_csv("../data/2015_us.csv")
+tri_data_2015 <- tri_data_2015 %>% 
+  select()
+
+library(readr)
+tri_data_2016 <- read_csv("../data/2016_us.csv")
+tri_data_2016 <- tri_data_2016 %>% 
+  select()
+
+library(readr)
+tri_data_2017 <- read_csv("../data/2017_us.csv")
+tri_data_2017 <- tri_data_2017 %>% 
+  select()
+
+library(readr)
+tri_data_2018 <- read_csv("../data/2018_us.csv")
+tri_data_2018 <- tri_data_2018 %>% 
+  select()
+
+library(readr)
+tri_data_2019 <- read_csv("../data/2019_us.csv")
+tri_data_2019 <- tri_data_2019 %>% 
+  select()
+
+library(readr)
+tri_data_2020 <- read_csv("../data/2020_us.csv")
+tri_data_2020 <- tri_data_2020 %>% 
+  select()
+
+library(readr)
+tri_data_2021 <- read_csv("../data/2021_us.csv")
+tri_data_2021 <- tri_data_2021 %>% 
+  select()
+
 ```
+
 
 
 ## 3. Ethics review
