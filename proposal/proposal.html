@@ -364,7 +364,7 @@ library(broom)</code></pre>
 <div id="data" class="section level2">
 <h2>2. Data</h2>
 <pre class="r"><code>library(readr)
-X2011_us &lt;- read_csv(&quot;../data/2011_us.csv&quot;)</code></pre>
+tri_data_2011 &lt;- read_csv(&quot;../data/2011_us.csv&quot;)</code></pre>
 <pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
 ## e.g.:
 ##   dat &lt;- vroom(...)
@@ -378,7 +378,183 @@ X2011_us &lt;- read_csv(&quot;../data/2011_us.csv&quot;)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>X2011_us &lt;- X2011_us %&gt;%
+<pre class="r"><code>tri_data_2011 &lt;- tri_data_2011 %&gt;%
+  select()
+
+library(readr)
+tri_data_2012 &lt;- read_csv(&quot;../data/2012_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 82842 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (27): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2012 &lt;-  tri_data_2012 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2013 &lt;- read_csv(&quot;../data/2013_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 83356 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (27): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2013 &lt;- tri_data_2013 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2014 &lt;- read_csv(&quot;../data/2014_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 83590 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2014 &lt;- tri_data_2014 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2015 &lt;- read_csv(&quot;../data/2015_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 82866 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2015 &lt;- tri_data_2015 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2016 &lt;- read_csv(&quot;../data/2016_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 81598 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2016 &lt;- tri_data_2016 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2017 &lt;- read_csv(&quot;../data/2017_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 81725 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2017 &lt;- tri_data_2017 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2018 &lt;- read_csv(&quot;../data/2018_us.csv&quot;)</code></pre>
+<pre><code>## Rows: 81510 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2018 &lt;- tri_data_2018 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2019 &lt;- read_csv(&quot;../data/2019_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 80432 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2019 &lt;- tri_data_2019 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2020 &lt;- read_csv(&quot;../data/2020_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 78051 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2020 &lt;- tri_data_2020 %&gt;% 
+  select()
+
+library(readr)
+tri_data_2021 &lt;- read_csv(&quot;../data/2021_us.csv&quot;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<pre><code>## Rows: 77515 Columns: 119
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
+## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
+## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tri_data_2021 &lt;- tri_data_2021 %&gt;% 
   select()</code></pre>
 </div>
 <div id="ethics-review" class="section level2">
