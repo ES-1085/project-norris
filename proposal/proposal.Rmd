@@ -1,7 +1,7 @@
 ---
-title: "Project proposal"
-author: "Team name"
-output: github_document
+title: "Toxic Chemical Release: A Pollution Outlook"
+author: "Joanna Pittari & Cedar Callahan"
+output: html_document
 ---
 
 ```{r load-packages, message = FALSE}
