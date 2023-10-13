@@ -72,9 +72,8 @@ tri_data_2021 <- tri_data_2021 %>%
 
 ```
 
-
-
 ## 3. Ethics review
+
 
 ## 4. Data analysis plan
 
