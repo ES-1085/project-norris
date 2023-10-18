@@ -162,7 +162,12 @@ tri_data <- tri_data %>%
          "one_time_release" = "117. 8.8 - ONE-TIME RELEASE")
 ```
 
-Preliminary data analysis is below. This data set includes 26,267 facilities, 6,345 parent companies, 30 industries, 627 chemicals, as well as a smaller dataset called chemical_info that holds information about each chemical and whether it is a metal, pbt, pfas, or carcinogen and if it is included in the Clean Air Act. 
+Preliminary data analysis is below. This data set includes 895,941 observations and 58 variables. Of this, there are 26,267 facilities, 6,345 parent companies, 30 industries, 627 chemicals, as well as a smaller dataset called chemical_info that holds information about each chemical and whether it is a metal, pbt, pfas, or carcinogen and if it is included in the Clean Air Act. 
+
+```{r glimpse}
+glimpse(tri_data)
+```
+
 
 ```{r facilities}
 tri_data %>% 
