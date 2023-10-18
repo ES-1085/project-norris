@@ -357,211 +357,246 @@ Outlook</h1>
 
 
 <pre class="r"><code>library(tidyverse)
-library(broom)</code></pre>
+library(broom)
+library(forcats)</code></pre>
 <div id="introduction" class="section level2">
 <h2>1. Introduction</h2>
+<p>This data comes from the Environmental Protection Agency’s (EPA)
+Toxics Release Inventory (TRI) which is collected every year. The raw
+data from the EPA included 119 variables detailing facility information
+and location, toxin types, regulation and oversight, methods of
+disposal, and amount of toxins released. We will be analyzing data from
+2011 to 2021 for trends in pollution, frequency of chemical use by
+chemical category (metal, carcinogen, pbt, pfas, etc), method of
+chemical disposal, location (county, state, and if a facility is on
+tribal land), industry sector, and which chemicals are most common in
+each industry sector. Additionally, we will examine whether chemicals
+are included in the Clean Air Act (regulates how much can be released)
+and if there is any correlation between industry sector and amount of
+Clean Air Act chemicals used.</p>
 </div>
 <div id="data" class="section level2">
 <h2>2. Data</h2>
+<p>Before we could begin any sort of analysis, we had to join our
+datasets and narrow down our variables. Additionally, in the original
+data each column began with a number, which we found challenging to work
+with in preliminary graphs. This problem was solved by renaming the
+variables in a way that we felt was logical and easier to work with.
+Below is the process of creating, combining, narrowing, and simplifying
+the data.</p>
 <pre class="r"><code>library(readr)
-tri_data_2011 &lt;- read_csv(&quot;../data/2011_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 82456 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (27): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2011 &lt;- tri_data_2011 %&gt;%
-  select()
-
-library(readr)
-tri_data_2012 &lt;- read_csv(&quot;../data/2012_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 82842 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (27): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2012 &lt;-  tri_data_2012 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2013 &lt;- read_csv(&quot;../data/2013_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 83356 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (27): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2013 &lt;- tri_data_2013 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2014 &lt;- read_csv(&quot;../data/2014_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 83590 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2014 &lt;- tri_data_2014 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2015 &lt;- read_csv(&quot;../data/2015_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 82866 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2015 &lt;- tri_data_2015 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2016 &lt;- read_csv(&quot;../data/2016_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 81598 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2016 &lt;- tri_data_2016 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2017 &lt;- read_csv(&quot;../data/2017_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 81725 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2017 &lt;- tri_data_2017 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2018 &lt;- read_csv(&quot;../data/2018_us.csv&quot;)</code></pre>
-<pre><code>## Rows: 81510 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (85): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (6): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2018 &lt;- tri_data_2018 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2019 &lt;- read_csv(&quot;../data/2019_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 80432 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2019 &lt;- tri_data_2019 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2020 &lt;- read_csv(&quot;../data/2020_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 78051 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2020 &lt;- tri_data_2020 %&gt;% 
-  select()
-
-library(readr)
-tri_data_2021 &lt;- read_csv(&quot;../data/2021_us.csv&quot;)</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 77515 Columns: 119
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (28): 2. TRIFD, 4. FACILITY NAME, 5. STREET ADDRESS, 6. CITY, 7. COUNTY,...
-## dbl (84): 1. YEAR, 3. FRS ID, 10. BIA, 12. LATITUDE, 13. LONGITUDE, 19. INDU...
-## lgl  (7): 21. PRIMARY SIC, 22. SIC 2, 23. SIC 3, 24. SIC 4, 25. SIC 5, 26. S...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>tri_data_2021 &lt;- tri_data_2021 %&gt;% 
-  select()</code></pre>
-</div>
-<div id="ethics-review" class="section level2">
-<h2>3. Ethics review</h2>
+my_variables &lt;- c(&quot;1. YEAR&quot;, &quot;4. FACILITY NAME&quot;, &quot;5. STREET ADDRESS&quot;, &quot;6. CITY&quot;, &quot;7. COUNTY&quot;, &quot;8. ST&quot;, &quot;9. ZIP&quot;, &quot;10. BIA&quot;, &quot;11. TRIBE&quot;, &quot;12. LATITUDE&quot;, &quot;13. LONGITUDE&quot;, &quot;15. PARENT CO NAME&quot;, &quot;17. STANDARD PARENT CO NAME&quot;, &quot;18. FEDERAL FACILITY&quot;, &quot;20. INDUSTRY SECTOR&quot;, &quot;34. CHEMICAL&quot;, &quot;35. ELEMENTAL METAL INCLUDED&quot;, &quot;39. CLEAN AIR ACT CHEMICAL&quot;, &quot;40. CLASSIFICATION&quot;, &quot;41. METAL&quot;, &quot;42. METAL CATEGORY&quot;, &quot;43. CARCINOGEN&quot;, &quot;44. PBT&quot;, &quot;45. PFAS&quot;, &quot;46. FORM TYPE&quot;, &quot;47. UNIT OF MEASURE&quot;, &quot;48. 5.1 - FUGITIVE AIR&quot;, &quot;49. 5.2 - STACK AIR&quot;, &quot;50. 5.3 - WATER&quot;, &quot;51. 5.4 - UNDERGROUND&quot;, &quot;52. 5.4.1 - UNDERGROUND CL I&quot;, &quot;53. 5.4.2 - UNDERGROUND C II-V&quot;, &quot;54. 5.5.1 - LANDFILLS&quot;, &quot;57. 5.5.2 - LAND TREATMENT&quot;, &quot;58. 5.5.3 - SURFACE IMPNDMNT&quot;, &quot;61. 5.5.4 - OTHER DISPOSAL&quot;, &quot;62. ON-SITE RELEASE TOTAL&quot;, &quot;63. 6.1 - POTW - TRNS RLSE&quot;, &quot;64. 6.1 - POTW - TRNS TRT&quot;, &quot;65. POTW - TOTAL TRANSFERS&quot;, &quot;85. OFF-SITE RELEASE TOTAL&quot;, &quot;91. OFF-SITE RECYCLED TOTAL&quot;, &quot;94. OFF-SITE ENERGY RECOVERY T&quot;, &quot;101. OFF-SITE TREATED TOTAL&quot;, &quot;103. 6.2 - TOTAL TRANSFER&quot;, &quot;104. TOTAL RELEASES&quot;, &quot;105. 8.1 - RELEASES&quot;, &quot;106. 8.1A - ON-SITE CONTAINED&quot;, &quot;107. 8.1B - ON-SITE OTHER&quot;, &quot;108. 8.1C - OFF-SITE CONTAIN&quot;, &quot;109. 8.1D - OFF-SITE OTHER R&quot;, &quot;110. 8.2 - ENERGY RECOVER ON&quot;, &quot;111. 8.3 - ENERGY RECOVER OF&quot;, &quot;112. 8.4 - RECYCLING ON SITE&quot;, &quot;113. 8.5 - RECYCLING OFF SIT&quot;, &quot;114. 8.6 - TREATMENT ON SITE&quot;, &quot;115. 8.7 - TREATMENT OFF SITE&quot;, &quot;117. 8.8 - ONE-TIME RELEASE&quot;)
+tri_data_2011 &lt;- read_csv(&quot;../data/2011_us.csv&quot;, show_col_types = FALSE)
+tri_data_2011 &lt;- tri_data_2011 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2012 &lt;- read_csv(&quot;../data/2012_us.csv&quot;, show_col_types = FALSE)
+tri_data_2012 &lt;- tri_data_2012 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr) 
+tri_data_2013 &lt;- read_csv(&quot;../data/2013_us.csv&quot;, show_col_types = FALSE)
+tri_data_2013 &lt;- tri_data_2013 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2014 &lt;- read_csv(&quot;../data/2014_us.csv&quot;, show_col_types = FALSE)
+tri_data_2014 &lt;- tri_data_2014 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2015 &lt;- read_csv(&quot;../data/2015_us.csv&quot;, show_col_types = FALSE)
+tri_data_2015 &lt;- tri_data_2015 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2016 &lt;- read_csv(&quot;../data/2016_us.csv&quot;, show_col_types = FALSE)
+tri_data_2016 &lt;- tri_data_2016 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2017 &lt;- read_csv(&quot;../data/2017_us.csv&quot;, show_col_types = FALSE)
+tri_data_2017 &lt;- tri_data_2017 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2018 &lt;- read_csv(&quot;../data/2018_us.csv&quot;, show_col_types = FALSE)
+tri_data_2018 &lt;- tri_data_2018 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2019 &lt;- read_csv(&quot;../data/2019_us.csv&quot;, show_col_types = FALSE)
+tri_data_2019 &lt;- tri_data_2019 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2020 &lt;- read_csv(&quot;../data/2020_us.csv&quot;, show_col_types = FALSE)
+tri_data_2020 &lt;- tri_data_2020 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>library(readr)
+tri_data_2021 &lt;- read_csv(&quot;../data/2021_us.csv&quot;, show_col_types = FALSE)
+tri_data_2021 &lt;- tri_data_2021 %&gt;% 
+  select(my_variables)</code></pre>
+<pre class="r"><code>tri_data &lt;- dplyr::bind_rows(tri_data_2011, tri_data_2012, tri_data_2013, tri_data_2014, tri_data_2015, tri_data_2016, tri_data_2017, tri_data_2018, tri_data_2019, tri_data_2020, tri_data_2021)</code></pre>
+<pre class="r"><code>tri_data &lt;- tri_data %&gt;% 
+  rename(&quot;year&quot; = &quot;1. YEAR&quot;, 
+         &quot;facility_name&quot; = &quot;4. FACILITY NAME&quot;,
+         &quot;street_address&quot; = &quot;5. STREET ADDRESS&quot;, 
+         &quot;city&quot; = &quot;6. CITY&quot;, 
+         &quot;county&quot; = &quot;7. COUNTY&quot;, 
+         &quot;state&quot; = &quot;8. ST&quot;, 
+         &quot;zip_code&quot; = &quot;9. ZIP&quot;, 
+         &quot;bia_code&quot; = &quot;10. BIA&quot;, 
+         &quot;tribal_land&quot; = &quot;11. TRIBE&quot;, 
+         &quot;latitude&quot; = &quot;12. LATITUDE&quot;, 
+         &quot;longitude&quot; = &quot;13. LONGITUDE&quot;, 
+         &quot;parent_co_name&quot; = &quot;15. PARENT CO NAME&quot;, 
+         &quot;standard_parent_co_name&quot; = &quot;17. STANDARD PARENT CO NAME&quot;, 
+         &quot;federal_facility&quot; = &quot;18. FEDERAL FACILITY&quot;, 
+         &quot;industry_sector&quot; = &quot;20. INDUSTRY SECTOR&quot;, 
+         &quot;chemical&quot; = &quot;34. CHEMICAL&quot;, 
+         &quot;elemental_metal_included&quot; = &quot;35. ELEMENTAL METAL INCLUDED&quot;, 
+         &quot;clean_air_act_chemical&quot; = &quot;39. CLEAN AIR ACT CHEMICAL&quot;, 
+         &quot;classification&quot; = &quot;40. CLASSIFICATION&quot;, 
+         &quot;metal&quot; = &quot;41. METAL&quot;, 
+         &quot;metal_category&quot; = &quot;42. METAL CATEGORY&quot;, 
+         &quot;carcinogen&quot; = &quot;43. CARCINOGEN&quot;, 
+         &quot;pbt&quot; = &quot;44. PBT&quot;, 
+         &quot;pfas&quot; = &quot;45. PFAS&quot;, 
+         &quot;form_type&quot; = &quot;46. FORM TYPE&quot;, 
+         &quot;unit_of_measurement&quot; = &quot;47. UNIT OF MEASURE&quot;, 
+         &quot;fugitive_air&quot; = &quot;48. 5.1 - FUGITIVE AIR&quot;, 
+         &quot;stack_air&quot; = &quot;49. 5.2 - STACK AIR&quot;, 
+         &quot;water&quot; = &quot;50. 5.3 - WATER&quot;, 
+         &quot;underground&quot; = &quot;51. 5.4 - UNDERGROUND&quot;, 
+         &quot;underground_class_1&quot; = &quot;52. 5.4.1 - UNDERGROUND CL I&quot;, 
+         &quot;underground_class_2_through_5&quot; = &quot;53. 5.4.2 - UNDERGROUND C II-V&quot;, 
+         &quot;landfills&quot; = &quot;54. 5.5.1 - LANDFILLS&quot;, 
+         &quot;land_treatment&quot; = &quot;57. 5.5.2 - LAND TREATMENT&quot;, 
+         &quot;surface_impoundment&quot; = &quot;58. 5.5.3 - SURFACE IMPNDMNT&quot;, 
+         &quot;other_disposal&quot; = &quot;61. 5.5.4 - OTHER DISPOSAL&quot;, 
+         &quot;on_site_release_total&quot; = &quot;62. ON-SITE RELEASE TOTAL&quot;, 
+         &quot;public_treatment_transfer_release&quot; = &quot;63. 6.1 - POTW - TRNS RLSE&quot;,
+         &quot;public_treatment_transfer_treat&quot; = &quot;64. 6.1 - POTW - TRNS TRT&quot;, 
+         &quot;public_treatment_total_transfer&quot; = &quot;65. POTW - TOTAL TRANSFERS&quot;, 
+         &quot;off_site_release_total&quot; = &quot;85. OFF-SITE RELEASE TOTAL&quot;, 
+         &quot;off_site_recycled_total&quot; = &quot;91. OFF-SITE RECYCLED TOTAL&quot;, 
+         &quot;off_site_energy_recovery_total&quot; = &quot;94. OFF-SITE ENERGY RECOVERY T&quot;, 
+         &quot;off_site_treated_total&quot; = &quot;101. OFF-SITE TREATED TOTAL&quot;, 
+         &quot;total_transfer&quot; = &quot;103. 6.2 - TOTAL TRANSFER&quot;, 
+         &quot;total_releases&quot; = &quot;104. TOTAL RELEASES&quot;, 
+         &quot;releases&quot; = &quot;105. 8.1 - RELEASES&quot;, 
+         &quot;on_site_contained&quot; = &quot;106. 8.1A - ON-SITE CONTAINED&quot;, 
+         &quot;on_site_other&quot; = &quot;107. 8.1B - ON-SITE OTHER&quot;, 
+         &quot;off_site_contain&quot; = &quot;108. 8.1C - OFF-SITE CONTAIN&quot;, 
+         &quot;off_site_other&quot; = &quot;109. 8.1D - OFF-SITE OTHER R&quot;, 
+         &quot;energy_recover_on&quot; = &quot;110. 8.2 - ENERGY RECOVER ON&quot;, 
+         &quot;energy_recover_off&quot; = &quot;111. 8.3 - ENERGY RECOVER OF&quot;, 
+         &quot;recycling_on_site&quot; = &quot;112. 8.4 - RECYCLING ON SITE&quot;, 
+         &quot;recycling_off_site&quot; = &quot;113. 8.5 - RECYCLING OFF SIT&quot;, 
+         &quot;treatment_on_site&quot; = &quot;114. 8.6 - TREATMENT ON SITE&quot;, 
+         &quot;treatment_off_site&quot; = &quot;115. 8.7 - TREATMENT OFF SITE&quot;, 
+         &quot;one_time_release&quot; = &quot;117. 8.8 - ONE-TIME RELEASE&quot;)</code></pre>
+<p>Preliminary data analysis is below. This data set includes 26,267
+facilities, 6,345 parent companies, 30 industries, 627 chemicals, as
+well as a smaller dataset called chemical_info that holds information
+about each chemical and whether it is a metal, pbt, pfas, or carcinogen
+and if it is included in the Clean Air Act.</p>
+<pre class="r"><code>tri_data %&gt;% 
+  select(facility_name) %&gt;% 
+  distinct(facility_name) %&gt;% 
+  arrange(facility_name)</code></pre>
+<pre><code>## # A tibble: 26,267 × 1
+##    facility_name                                      
+##    &lt;chr&gt;                                              
+##  1 1000PALMS VISTA CHINO PLANT                        
+##  2 112 CORPORATE DRIVE E-CITY                         
+##  3 11TH STREET BATCH PLANT                            
+##  4 18TH ST                                            
+##  5 193 DOCK                                           
+##  6 1I BRANCH - SPECIALTY SERVICES COMPLEX             
+##  7 1ST AYD CORP                                       
+##  8 21ST CENTURY ENVIRONMENTAL MANAGEMENT OF NEVADA LLC
+##  9 250 - KERSHAW OILSEEDS                             
+## 10 2700 REAL ESTATE HOLDINGS LLC                      
+## # ℹ 26,257 more rows</code></pre>
+<pre class="r"><code>tri_data %&gt;% 
+  select(parent_co_name) %&gt;% 
+  distinct(parent_co_name) %&gt;% 
+  arrange(parent_co_name)</code></pre>
+<pre><code>## # A tibble: 6,345 × 1
+##    parent_co_name                       
+##    &lt;chr&gt;                                
+##  1 3A COMPOSITES USA INC                
+##  2 3M CO                                
+##  3 3M TECHNICAL CERAMICS                
+##  4 3P HOLDINGS INC                      
+##  5 4-D CORROSION CONTROL SPECIALISTS INC
+##  6 8TH AVE FOOD &amp; PROVISIONS            
+##  7 A &amp; E INC                            
+##  8 A &amp; W READY MIX INC                  
+##  9 A CUBED CORP                         
+## 10 A FINKL &amp; SONS CO                    
+## # ℹ 6,335 more rows</code></pre>
+<pre class="r"><code>tri_data %&gt;% 
+  select(industry_sector) %&gt;% 
+  distinct(industry_sector) %&gt;% 
+  arrange(industry_sector)</code></pre>
+<pre><code>## # A tibble: 30 × 1
+##    industry_sector                  
+##    &lt;chr&gt;                            
+##  1 Apparel                          
+##  2 Beverages                        
+##  3 Chemical Wholesalers             
+##  4 Chemicals                        
+##  5 Coal Mining                      
+##  6 Computers and Electronic Products
+##  7 Electric Utilities               
+##  8 Electrical Equipment             
+##  9 Fabricated Metals                
+## 10 Food                             
+## # ℹ 20 more rows</code></pre>
+<pre class="r"><code>tri_data %&gt;% 
+  select(chemical) %&gt;% 
+  distinct(chemical) %&gt;% 
+  arrange(chemical)</code></pre>
+<pre><code>## # A tibble: 627 × 1
+##    chemical                                      
+##    &lt;chr&gt;                                         
+##  1 1,1,1,2-Tetrachloro-2-fluoroethane (HCFC-121a)
+##  2 1,1,1,2-Tetrachloroethane                     
+##  3 1,1,1-Trichloroethane                         
+##  4 1,1,2,2-Tetrachloro-1-fluoroethane (HCFC-121) 
+##  5 1,1,2,2-Tetrachloroethane                     
+##  6 1,1,2,2-Tetrahydroperfluorodecyl acrylate     
+##  7 1,1,2,2-Tetrahydroperfluorododecyl acrylate   
+##  8 1,1,2,2-Tetrahydroperfluorohexadecyl acrylate 
+##  9 1,1,2,2-Tetrahydroperfluorotetradecyl acrylate
+## 10 1,1,2-Trichloroethane                         
+## # ℹ 617 more rows</code></pre>
+<pre class="r"><code>chemical_info &lt;- tri_data %&gt;% 
+  select(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %&gt;% 
+  distinct(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %&gt;% 
+  arrange(chemical)</code></pre>
 </div>
 <div id="data-analysis-plan" class="section level2">
-<h2>4. Data analysis plan</h2>
+<h2>3. Data analysis plan</h2>
+<p>This is a very large dataset with a mix of character and numerical
+variables, so we anticipate that the first part of this project will be
+learning the best ways to visualize this data. As this is not a data set
+or subject that either of us have prior experience with, we will also be
+learning more about the data (including background vocabulary) during
+the first few weeks of working with it.</p>
+<p>We have consolidated data from 2011 to 2021 into one data frame we
+have called tri_data. We examined each of the variables and selected 58
+that we believe will be helpful for our analysis. Through this project,
+we are hoping to learn more about methods of data visualization,
+especially when working with large, complex datasets. We are also hoping
+to learn more about data manipulation, communicating our findings, and
+how to share complex data in ways that are accurate, accessible, and
+engaging.</p>
+<p>We are specifically interested in mapping relationships between
+industry sectors, emissions, chemical information (carcinogens, pfas,
+metals, pbts, etc), and location. Questions that will be guiding us are:
+1) is there a correlation between industry sector and frequency of
+carcinogen, pfas, and pbt use? 2) is there a correlation between
+location and frequency of use of Clean Air Act chemicals? 3) how many
+facilities are located on tribal land and is there a significant
+difference in the type and amount of chemical release when compared to
+facilities not on tribal land? 4) what are the trends in pollution
+(chemical release) over the past 10 years?</p>
 </div>
 
 
