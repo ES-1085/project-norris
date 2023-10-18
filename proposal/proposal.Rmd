@@ -211,6 +211,3 @@ We are specifically interested in mapping relationships between industry sectors
 3) how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 4) what are the trends in pollution (chemical release) over the past 10 years?
 
-
-
-
