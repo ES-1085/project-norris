@@ -6,22 +6,51 @@ output: html_document
 ---
 
 
+#Library and Data Read-In
+
+```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(leaflet)
+library(ggthemes)
+library(ggridges)
+library(ggmap)
+library(lubridate)
+library(stringr)
+library(readr)
+library(RColorBrewer)
+library(forcats)
+library(colorspace)
+```
+
+```{r load-data}
+```
+
+
 #Outline
 
 ##Introduction
 introduction to dataset & summary stats
+introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
+
+```{r}
+```
+
 
 ##Location Analysis
 location of facilities, location trends, tribal lands, proximity
-
-##Chemical Analysis
-chemical info (type, category, etc), trends in chemical use and disposal 
+question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 
 ##Industry Analysis
 industry sector trends (location, chemical use, pollution), changes in industry sector prevalence
+question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
+
+##Chemical Analysis
+chemical info (type, category, etc), trends in chemical use and disposal 
+question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
 
 ##Pollution analysis
 trends in pollution, on-site vs off-site disposal
+question: what are the trends in pollution (chemical release) over the past 10 years?
 
 ##Conclusion
 overview of data and conclusions about pollution and chemical use trends
