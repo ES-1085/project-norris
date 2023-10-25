@@ -22,3 +22,6 @@ industry sector trends (location, chemical use, pollution), changes in industry 
 
 ##Pollution analysis
 trends in pollution, on-site vs off-site disposal
+
+##Conclusion
+overview of data and conclusions about pollution and chemical use trends
