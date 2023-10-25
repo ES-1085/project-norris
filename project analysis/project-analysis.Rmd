@@ -1,0 +1,24 @@
+---
+title: "Project Analysis [insert catchy name here]"
+author: "Cedar and Joanna"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+#Outline
+
+##Introduction
+introduction to dataset & summary stats
+
+##Location Analysis
+location of facilities, location trends, tribal lands, proximity
+
+##Chemical Analysis
+chemical info (type, category, etc), trends in chemical use and disposal 
+
+##Industry Analysis
+industry sector trends (location, chemical use, pollution), changes in industry sector prevalence
+
+##Pollution analysis
+trends in pollution, on-site vs off-site disposal
