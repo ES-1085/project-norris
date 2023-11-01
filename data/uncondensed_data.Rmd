@@ -1,0 +1,153 @@
+---
+title: "data (pre-condensing)"
+author: "Cedar Callahan"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(broom)
+library(forcats)
+library(readr)
+```
+
+```{r data-set-assignment-2011, warning = FALSE}
+my_variables <- c("1. YEAR", "4. FACILITY NAME", "5. STREET ADDRESS", "6. CITY", "7. COUNTY", "8. ST", "9. ZIP", "10. BIA", "11. TRIBE", "12. LATITUDE", "13. LONGITUDE", "15. PARENT CO NAME", "17. STANDARD PARENT CO NAME", "18. FEDERAL FACILITY", "20. INDUSTRY SECTOR", "34. CHEMICAL", "35. ELEMENTAL METAL INCLUDED", "39. CLEAN AIR ACT CHEMICAL", "40. CLASSIFICATION", "41. METAL", "42. METAL CATEGORY", "43. CARCINOGEN", "44. PBT", "45. PFAS", "46. FORM TYPE", "47. UNIT OF MEASURE", "48. 5.1 - FUGITIVE AIR", "49. 5.2 - STACK AIR", "50. 5.3 - WATER", "51. 5.4 - UNDERGROUND", "52. 5.4.1 - UNDERGROUND CL I", "53. 5.4.2 - UNDERGROUND C II-V", "54. 5.5.1 - LANDFILLS", "57. 5.5.2 - LAND TREATMENT", "58. 5.5.3 - SURFACE IMPNDMNT", "61. 5.5.4 - OTHER DISPOSAL", "62. ON-SITE RELEASE TOTAL", "63. 6.1 - POTW - TRNS RLSE", "64. 6.1 - POTW - TRNS TRT", "65. POTW - TOTAL TRANSFERS", "85. OFF-SITE RELEASE TOTAL", "91. OFF-SITE RECYCLED TOTAL", "94. OFF-SITE ENERGY RECOVERY T", "101. OFF-SITE TREATED TOTAL", "103. 6.2 - TOTAL TRANSFER", "104. TOTAL RELEASES", "105. 8.1 - RELEASES", "106. 8.1A - ON-SITE CONTAINED", "107. 8.1B - ON-SITE OTHER", "108. 8.1C - OFF-SITE CONTAIN", "109. 8.1D - OFF-SITE OTHER R", "110. 8.2 - ENERGY RECOVER ON", "111. 8.3 - ENERGY RECOVER OF", "112. 8.4 - RECYCLING ON SITE", "113. 8.5 - RECYCLING OFF SIT", "114. 8.6 - TREATMENT ON SITE", "115. 8.7 - TREATMENT OFF SITE", "117. 8.8 - ONE-TIME RELEASE")
+```
+
+```{r data-set-assignment-2011, warning = FALSE}
+tri_data_2011 <- read_csv("../data/2011_us.csv", show_col_types = FALSE)
+tri_data_2011 <- tri_data_2011 %>% 
+  select(my_variables)
+
+```
+
+```{r data-set-assignment-2012, warning = FALSE}
+tri_data_2012 <- read_csv("../data/2012_us.csv", show_col_types = FALSE)
+tri_data_2012 <- tri_data_2012 %>% 
+  select(my_variables)
+```
+
+``` {r data-set-assignment-2013, warning = FALSE}
+tri_data_2013 <- read_csv("../data/2013_us.csv", show_col_types = FALSE)
+tri_data_2013 <- tri_data_2013 %>% 
+  select(my_variables)
+```
+
+``` {r data-set-assignment-2014, warning = FALSE}
+tri_data_2014 <- read_csv("../data/2014_us.csv", show_col_types = FALSE)
+tri_data_2014 <- tri_data_2014 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2015, warning = FALSE}
+tri_data_2015 <- read_csv("../data/2015_us.csv", show_col_types = FALSE)
+tri_data_2015 <- tri_data_2015 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2016, warning = FALSE}
+tri_data_2016 <- read_csv("../data/2016_us.csv", show_col_types = FALSE)
+tri_data_2016 <- tri_data_2016 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2017, warning = FALSE}
+tri_data_2017 <- read_csv("../data/2017_us.csv", show_col_types = FALSE)
+tri_data_2017 <- tri_data_2017 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2018, warning = FALSE}
+tri_data_2018 <- read_csv("../data/2018_us.csv", show_col_types = FALSE)
+tri_data_2018 <- tri_data_2018 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2019, warning = FALSE}
+tri_data_2019 <- read_csv("../data/2019_us.csv", show_col_types = FALSE)
+tri_data_2019 <- tri_data_2019 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2020, warning = FALSE}
+tri_data_2020 <- read_csv("../data/2020_us.csv", show_col_types = FALSE)
+tri_data_2020 <- tri_data_2020 %>% 
+  select(my_variables)
+```
+
+```{r data-set-assignment-2021, warning = FALSE}
+tri_data_2021 <- read_csv("../data/2021_us.csv", show_col_types = FALSE)
+tri_data_2021 <- tri_data_2021 %>% 
+  select(my_variables)
+```
+
+```{r bind-rows-2011-2021}
+tri_data <- dplyr::bind_rows(tri_data_2011, tri_data_2012, tri_data_2013, tri_data_2014, tri_data_2015, tri_data_2016, tri_data_2017, tri_data_2018, tri_data_2019, tri_data_2020, tri_data_2021)
+```
+
+```{r recode-variables}
+tri_data <- tri_data %>% 
+  rename("year" = "1. YEAR", 
+         "facility_name" = "4. FACILITY NAME",
+         "street_address" = "5. STREET ADDRESS", 
+         "city" = "6. CITY", 
+         "county" = "7. COUNTY", 
+         "state" = "8. ST", 
+         "zip_code" = "9. ZIP", 
+         "bia_code" = "10. BIA", 
+         "tribal_land" = "11. TRIBE", 
+         "latitude" = "12. LATITUDE", 
+         "longitude" = "13. LONGITUDE", 
+         "parent_co_name" = "15. PARENT CO NAME", 
+         "standard_parent_co_name" = "17. STANDARD PARENT CO NAME", 
+         "federal_facility" = "18. FEDERAL FACILITY", 
+         "industry_sector" = "20. INDUSTRY SECTOR", 
+         "chemical" = "34. CHEMICAL", 
+         "elemental_metal_included" = "35. ELEMENTAL METAL INCLUDED", 
+         "clean_air_act_chemical" = "39. CLEAN AIR ACT CHEMICAL", 
+         "classification" = "40. CLASSIFICATION", 
+         "metal" = "41. METAL", 
+         "metal_category" = "42. METAL CATEGORY", 
+         "carcinogen" = "43. CARCINOGEN", 
+         "pbt" = "44. PBT", 
+         "pfas" = "45. PFAS", 
+         "form_type" = "46. FORM TYPE", 
+         "unit_of_measurement" = "47. UNIT OF MEASURE", 
+         "fugitive_air" = "48. 5.1 - FUGITIVE AIR", 
+         "stack_air" = "49. 5.2 - STACK AIR", 
+         "water" = "50. 5.3 - WATER", 
+         "underground" = "51. 5.4 - UNDERGROUND", 
+         "underground_class_1" = "52. 5.4.1 - UNDERGROUND CL I", 
+         "underground_class_2_through_5" = "53. 5.4.2 - UNDERGROUND C II-V", 
+         "landfills" = "54. 5.5.1 - LANDFILLS", 
+         "land_treatment" = "57. 5.5.2 - LAND TREATMENT", 
+         "surface_impoundment" = "58. 5.5.3 - SURFACE IMPNDMNT", 
+         "other_disposal" = "61. 5.5.4 - OTHER DISPOSAL", 
+         "on_site_release_total" = "62. ON-SITE RELEASE TOTAL", 
+         "public_treatment_transfer_release" = "63. 6.1 - POTW - TRNS RLSE",
+         "public_treatment_transfer_treat" = "64. 6.1 - POTW - TRNS TRT", 
+         "public_treatment_total_transfer" = "65. POTW - TOTAL TRANSFERS", 
+         "off_site_release_total" = "85. OFF-SITE RELEASE TOTAL", 
+         "off_site_recycled_total" = "91. OFF-SITE RECYCLED TOTAL", 
+         "off_site_energy_recovery_total" = "94. OFF-SITE ENERGY RECOVERY T", 
+         "off_site_treated_total" = "101. OFF-SITE TREATED TOTAL", 
+         "total_transfer" = "103. 6.2 - TOTAL TRANSFER", 
+         "total_releases" = "104. TOTAL RELEASES", 
+         "releases" = "105. 8.1 - RELEASES", 
+         "on_site_contained" = "106. 8.1A - ON-SITE CONTAINED", 
+         "on_site_other" = "107. 8.1B - ON-SITE OTHER", 
+         "off_site_contain" = "108. 8.1C - OFF-SITE CONTAIN", 
+         "off_site_other" = "109. 8.1D - OFF-SITE OTHER R", 
+         "energy_recover_on" = "110. 8.2 - ENERGY RECOVER ON", 
+         "energy_recover_off" = "111. 8.3 - ENERGY RECOVER OF", 
+         "recycling_on_site" = "112. 8.4 - RECYCLING ON SITE", 
+         "recycling_off_site" = "113. 8.5 - RECYCLING OFF SIT", 
+         "treatment_on_site" = "114. 8.6 - TREATMENT ON SITE", 
+         "treatment_off_site" = "115. 8.7 - TREATMENT OFF SITE", 
+         "one_time_release" = "117. 8.8 - ONE-TIME RELEASE")
+```
+
+.
