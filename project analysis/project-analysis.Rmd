@@ -6,7 +6,7 @@ output: html_document
 ---
 
 
-#Library and Data Read-In
+# Library and Data Read-In
 
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(sf)
@@ -33,13 +33,13 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 ```
 
 
-#Outline
+# Outline
 
-##Introduction
+## Introduction
 introduction to dataset & summary stats
 introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
 
-##Location Analysis
+## Location Analysis
 location of facilities, location trends, tribal lands, proximity
 question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 
@@ -59,19 +59,35 @@ addTiles() %>%
                  clusterOptions = markerClusterOptions())
 ```
 
+```{r}
+facility_location <- facility_location %>% 
+  mutate(tribal_yes_no = case_when(is.na(tribal_land) == FALSE ~ "Tribal Land",
+                                   TRUE ~ "Not Tribal Land"))
+```
 
-##Industry Analysis
+
+```{r}
+
+facility_location %>% 
+  group_by(city, tribal_yes_no) %>% 
+  summarise(num_facilities = n()) %>% 
+  group_by(tribal_yes_no) %>%
+  slice_max(num_facilities, n = 10)
+```
+
+
+## Industry Analysis
 industry sector trends (location, chemical use, pollution), changes in industry sector prevalence
 question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
 
 ```{r industry-sector-dataset}
 industry_info <- tri_data %>% 
   select(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain) %>% 
-  distinct(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain) %>% 
+  distinct(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain)
 ```
 
 
-##Chemical Analysis
+## Chemical Analysis
 chemical info (type, category, etc), trends in chemical use and disposal 
 question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
 
@@ -83,9 +99,16 @@ chemical_info <- tri_data %>%
 ```
 
 
-##Pollution analysis
+## Pollution analysis
 trends in pollution, on-site vs off-site disposal
 question: what are the trends in pollution (chemical release) over the past 10 years?
 
-##Conclusion
+```{r pollution-info-dataset}
+pollution_info <- tri_data %>% 
+  select(fugitive_air, stack_air, water, underground, underground_class_1, underground_class_2_through_5, landfills, land_treatment, surface_impoundment, other_disposal, on_site_release_total, public_treatment_total_transfer, off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, off_site_treated_total, total_transfer, total_releases, releases, on_site_contained, on_site_other, off_site_contain, off_site_other) %>% 
+  distinct(fugitive_air, stack_air, water, underground, underground_class_1, underground_class_2_through_5, landfills, land_treatment, surface_impoundment, other_disposal, on_site_release_total, public_treatment_total_transfer, off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, off_site_treated_total, total_transfer, total_releases, releases, on_site_contained, on_site_other, off_site_contain, off_site_other)
+```
+
+
+## Conclusion
 overview of data and conclusions about pollution and chemical use trends
