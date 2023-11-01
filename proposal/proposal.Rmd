@@ -64,8 +64,12 @@ chemical_info <- tri_data %>%
   arrange(chemical)
 ```
 
+## 3. Ethics
+We are working solely with data from the EPA's TRI Report from the past decade, so the effect on people in the past and future cannot be predicted, and there should be minimal negative effect on any related parties. We will explain the chemicals and their effect on the population at present, hopefully removing any possibility of misinterpretation or reason to mitigate the serious nature of this issue. The effects on the population will not include any identifying information of people whose medical cases were evaluated. 
 
-## 3. Data analysis plan
+The changing environment of the data with added and removed variables over the past decade will lead to gaps in our analysis that cannot be fully reported on. This will be clarified. Changing laws and regulation thresholds on chemical reporting further complicate this data. Spikes and declines in the concentration of chemical use may not be accurate due to lack of prior information. The changes in the inconsistent environment will be clarified but these possible factors will not be directly related to the graph and only serve as context for the year we are evaluating. 
+
+## 4. Data analysis plan
 This is a very large dataset with a mix of character and numerical variables, so we anticipate that the first part of this project will be learning the best ways to visualize this data. As this is not a data set or subject that either of us have prior experience with, we will also be learning more about the data (including background vocabulary) during the first few weeks of working with it. 
 
 We have consolidated data from 2011 to 2021 into one data frame we have called tri_data. We examined each of the variables and selected 58 that we believe will be helpful for our analysis. Through this project, we are hoping to learn more about methods of data visualization, especially when working with large, complex datasets. We are also hoping to learn more about data manipulation, communicating our findings, and how to share complex data in ways that are accurate, accessible, and engaging. 
