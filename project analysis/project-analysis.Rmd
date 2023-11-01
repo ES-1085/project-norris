@@ -9,6 +9,11 @@ output: html_document
 #Library and Data Read-In
 
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
+library(sf)
+library(htmltools)
+library(leafsync)
+library(rgeoboundaries)
+library(kableExtra)
 library(tidyverse)
 library(leaflet)
 library(ggthemes)
@@ -17,12 +22,14 @@ library(ggmap)
 library(lubridate)
 library(stringr)
 library(readr)
+library(broom)
 library(RColorBrewer)
 library(forcats)
 library(colorspace)
 ```
 
-```{r load-data}
+```{r data-read-in}
+tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 ```
 
 
@@ -40,6 +47,21 @@ introduce primary research question: what is the relationship between industry s
 location of facilities, location trends, tribal lands, proximity
 question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 
+```{r}
+facility_location <- tri_data %>% 
+  select("facility_name", "street_address", "city", "county", "state", "zip_code", "bia_code", "tribal_land", "latitude", "longitude") %>% 
+  distinct()
+```
+
+
+```{r}
+facility_location %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(lng = ~longitude, lat = ~latitude)
+```
+
+
 ##Industry Analysis
 industry sector trends (location, chemical use, pollution), changes in industry sector prevalence
 question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
@@ -47,6 +69,13 @@ question: is there a correlation between industry sector and frequency of carcin
 ##Chemical Analysis
 chemical info (type, category, etc), trends in chemical use and disposal 
 question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
+
+```{r}
+tri_data %>% 
+  ggplot(aes(y = fct_infreq(metal_category))) +
+  geom_bar()
+```
+
 
 ##Pollution analysis
 trends in pollution, on-site vs off-site disposal
