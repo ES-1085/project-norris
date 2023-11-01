@@ -39,26 +39,24 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 introduction to dataset & summary stats
 introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
 
-```{r}
-```
-
-
 ##Location Analysis
 location of facilities, location trends, tribal lands, proximity
 question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 
-```{r}
+```{r facility-location-dataset}
 facility_location <- tri_data %>% 
   select("facility_name", "street_address", "city", "county", "state", "zip_code", "bia_code", "tribal_land", "latitude", "longitude") %>% 
   distinct()
 ```
 
 
-```{r}
+```{r facility-map}
 facility_location %>% 
   leaflet() %>% 
-  addTiles() %>% 
-  addMarkers(lng = ~longitude, lat = ~latitude)
+addTiles() %>% 
+  addCircleMarkers(lng = ~longitude, 
+                 lat = ~latitude, 
+                 clusterOptions = markerClusterOptions())
 ```
 
 
@@ -66,14 +64,22 @@ facility_location %>%
 industry sector trends (location, chemical use, pollution), changes in industry sector prevalence
 question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
 
+```{r industry-sector-dataset}
+industry_info <- tri_data %>% 
+  select(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain) %>% 
+  distinct(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain) %>% 
+```
+
+
 ##Chemical Analysis
 chemical info (type, category, etc), trends in chemical use and disposal 
 question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
 
-```{r}
-tri_data %>% 
-  ggplot(aes(y = fct_infreq(metal_category))) +
-  geom_bar()
+```{r chemical-info-dataset}
+chemical_info <- tri_data %>% 
+  select(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  arrange(chemical)
 ```
 
 

@@ -17,7 +17,15 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 
 ## 1. Introduction
-This data comes from the Environmental Protection Agency's (EPA) Toxics Release Inventory (TRI) which is collected every year. The raw data from the EPA included 119 variables detailing facility information and location, toxin types, regulation and oversight, methods of disposal, and amount of toxins released. We will be analyzing data from 2011 to 2021 for trends in pollution, frequency of chemical use by chemical category (metal, carcinogen, pbt, pfas, etc), method of chemical disposal, location (county, state, and if a facility is on tribal land), industry sector, and which chemicals are most common in each industry sector. Additionally, we will examine whether chemicals are included in the Clean Air Act (regulates how much can be released) and if there is any correlation between industry sector and amount of Clean Air Act chemicals used.  
+
+This data comes from the Environmental Protection Agency's (EPA) Toxics Release Inventory (TRI) which is collected every year. The EPA describes the TRI as a resource for people to learn more about chemical releases and pollution from both industrial and federal facilities. Chemicals in the TRI are marked as potentially hazardous to human health. The EPA states that they can cause cancer, chronic health issues, and acute health issues, as well as having significant and detrimental environmental impacts. The TRI tracks 770 chemicals in 33 categories and collects data each year via forms filed by facilities (facilities are required to file one form per chemical annually that they manufacture, process, or use above a certain limit). Data collected for the TRI is annual, multimedia (tracks emissions to water, land, and air), and broad (it encompasses source reduction and pollution prevention). 
+
+We feel that this data is important to analyze and share because of the detrimental effects these chemicals have on people and the environment. Additionally, we believe that the prevalence of carcinogenic chemicals, as well as PFAS (perfluoroalkyl and polyfluoroalkyl substances) and PBTs (persistent, bioaccumulative and toxic substances) is something that everyone should have access to accurate information grounded in research and data. 
+
+The raw data from the EPA included 119 variables detailing facility information and location, toxin types, regulation and oversight, methods of disposal, and amount of toxins released (we did go through all of the variables and eliminate those we didn't feel we would use, bringing us down to 58). Throughout our project, we will be guided by the overall question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
+
+We will be analyzing data from 2011 to 2021 for trends in pollution, frequency of chemical use by chemical category (metal, carcinogen, pbt, pfas, etc), method of chemical disposal, location (county, state, and if a facility is on tribal land), industry sector, and which chemicals are most common in each industry sector. Additionally, we will examine whether chemicals are included in the Clean Air Act (regulates how much can be released) and if there is any correlation between industry sector and amount of Clean Air Act chemicals used. 
+
 
 ## 2. Data
 
@@ -74,19 +82,26 @@ This is a very large dataset with a mix of character and numerical variables, so
 
 We have consolidated data from 2011 to 2021 into one data frame we have called tri_data. We examined each of the variables and selected 58 that we believe will be helpful for our analysis. Through this project, we are hoping to learn more about methods of data visualization, especially when working with large, complex datasets. We are also hoping to learn more about data manipulation, communicating our findings, and how to share complex data in ways that are accurate, accessible, and engaging. 
 
-We are specifically interested in mapping relationships between industry sectors, emissions, chemical information (carcinogens, pfas, metals, pbts, etc), and location. Questions that will be guiding us are: 
+We are specifically interested in mapping relationships between industry sectors, emissions, chemical information (carcinogens, pfas, metals, pbts, etc), and location. Our general question asks about the relationship between industry sector and location, pollution, chemical use, and shifts over the past 10 years. We have formulated additional questions to help us visualize our general question. The sub-questions that will be guiding us are: 
 1) is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
 2) is there a correlation between location and frequency of use of Clean Air Act chemicals?
 3) how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 4) what are the trends in pollution (chemical release) over the past 10 years?
 
-We expect we will be using maps (location of facilities, industry sector groupings, facilities on tribal land, chemical distribution, etc) and multiple types of plots -especially scatter, line, bar, and density plots- (pollution/emmisions, chemical info and distribution, facilities/parent companies, use of clean air act chemicals, pollution trends) as well as tables and animations (we would love to visualize changes in pollution over time with animation). 
+We expect we will be using maps (location of facilities, industry sector groupings, facilities on tribal land, chemical distribution, etc) and multiple types of plots -especially scatter, line, bar, and density plots- (relationship between pollution/emissions and year, chemical type and distribution, facilities/parent companies and pollution level, use of clean air act chemicals by state, pollution trends by year) as well as tables and animations (we would love to visualize changes in pollution over time with animation). 
 
 ###Summary Stats and Preliminary Visualization
 
-```{r initial-visualizations}
+```{r initial-visualization-carcinogen}
 tri_data %>% 
-  ggplot(aes(x = chemical)) +
-  geom_bar(position = "dodge", )
+  ggplot(aes(x = carcinogen)) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ year)
+```
+
+```{r initial-visualization-stack-air-and-year}
+tri_data %>% 
+  ggplot(aes(x = year, y = stack_air)) +
+  geom_smooth()
 ```
 
