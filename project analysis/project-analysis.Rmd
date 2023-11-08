@@ -5,7 +5,6 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-
 # Library and Data Read-In
 
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
@@ -26,6 +25,9 @@ library(broom)
 library(RColorBrewer)
 library(forcats)
 library(colorspace)
+library(visdat)
+library(naniar)
+library(ggrepel)
 ```
 
 ```{r data-read-in}
@@ -35,80 +37,400 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 # Outline
 
-## Introduction
-introduction to dataset & summary stats
-introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
+# Introduction
 
+introduction to dataset & summary stats introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
+
+# Data Overview
 ## Location Analysis
-location of facilities, location trends, tribal lands, proximity
-question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
 
-```{r facility-location-dataset}
+location of facilities, location trends, tribal lands, proximity question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
+
+```{r facility-location-dataset, echo = FALSE, message = FALSE}
 facility_location <- tri_data %>% 
   select("facility_name", "street_address", "city", "county", "state", "zip_code", "bia_code", "tribal_land", "latitude", "longitude") %>% 
   distinct()
-```
 
-
-```{r facility-map}
-facility_location %>% 
-  leaflet() %>% 
-addTiles() %>% 
-  addCircleMarkers(lng = ~longitude, 
-                 lat = ~latitude, 
-                 clusterOptions = markerClusterOptions())
-```
-
-```{r}
 facility_location <- facility_location %>% 
+  mutate(tribal_yes_no = case_when(is.na(tribal_land) == FALSE ~ "Tribal Land",
+                                   TRUE ~ "Not Tribal Land"))
+
+tri_data <- tri_data %>% 
   mutate(tribal_yes_no = case_when(is.na(tribal_land) == FALSE ~ "Tribal Land",
                                    TRUE ~ "Not Tribal Land"))
 ```
 
-
-```{r}
-
-facility_location %>% 
-  group_by(city, tribal_yes_no) %>% 
-  summarise(num_facilities = n()) %>% 
-  group_by(tribal_yes_no) %>%
-  slice_max(num_facilities, n = 10)
+```{r number-of-facilities, echo = FALSE, message = FALSE}
+tri_data %>% 
+  select(standard_parent_co_name, parent_co_name, facility_name) %>% 
+  group_by(standard_parent_co_name, parent_co_name) %>% 
+  summarise(number_of_facilities = n_distinct(facility_name)) %>% 
+  arrange(desc(number_of_facilities))
 ```
 
+```{r facility-map, echo = FALSE, message = FALSE}
+tri_data %>% 
+  distinct(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state) %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+    addCircleMarkers(lng = ~longitude, 
+                 lat = ~latitude, 
+                 clusterOptions = markerClusterOptions(),
+                 popup = ~paste0(facility_name, "<br>", parent_co_name, "<br>", industry_sector, "<br>", city, ", ", state))
+```
+
+```{r percent-tribal-land, echo = FALSE, message = FALSE}
+facility_location %>% 
+  select(tribal_yes_no) %>% 
+  group_by(tribal_yes_no) %>%
+  summarise(percent = 100 * n()/nrow(facility_location))
+```
 
 ## Industry Analysis
-industry sector trends (location, chemical use, pollution), changes in industry sector prevalence
-question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
 
-```{r industry-sector-dataset}
+industry sector trends (location, chemical use, pollution), changes in industry sector prevalence question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
+
+```{r industry-sector-dataset, echo = FALSE, message = FALSE}
 industry_info <- tri_data %>% 
   select(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain) %>% 
   distinct(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain)
 ```
 
+```{r industry-sector-categories}
+tri_data <- tri_data %>% 
+  mutate(industry_sector_category = case_when(industry_sector %in% c("Tobacco", "Beverages", "Food") ~ "Agriculture and Food Processing",
+  industry_sector %in% c("Electrical Equipment", "Transportation Equipment", "Machinery", "Computers and Electronic     Products") ~ "Machinery and Technology",
+  industry_sector %in% c("Miscellaneous Manufacturing", "Other") ~ "Misc",
+  industry_sector %in% c("Chemicals", "Chemical Wholesalers", "Hazardous Waste") ~ "Chemicals and Waste",
+  industry_sector %in% c("Leather", "Apparel", "Textiles", "Textile Product") ~ "Textiles and Leather",
+  industry_sector %in% c("Petroleum Bulk Terminals", "Petroleum") ~ "Petroleum",
+  industry_sector %in% c("Metal Mining", "Coal Mining") ~ "Mining",
+  industry_sector %in% c("Nonmetallic Mineral Product", "Plastics and Rubber", "Fabricated Metals", "Primary Metals") ~ "Processed Materials",
+  industry_sector %in% c("Furniture", "Wood Products", "Paper", "Printing", "Publishing") ~ "Wood and Paper",
+  industry_sector %in% "Electric Utilities" ~ "Electric Utilities"))
+```
+
+```{r industry-sector-distribution, echo = FALSE, message = FALSE}
+tri_data %>% 
+ select(industry_sector) %>% 
+ group_by(industry_sector) %>%
+ summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+ arrange(desc(percent))
+
+tri_data %>% 
+  ggplot(aes(y = fct_infreq(industry_sector), fill = carcinogen)) +
+  geom_bar() +
+  scale_fill_viridis_d()
+```
+
+```{r industry-sector-category-distribution}
+tri_data %>% 
+  ggplot(aes(y = fct_infreq(industry_sector_category), fill = industry_sector_category)) +
+  geom_bar(fill = "#1F948C")
+```
+
 
 ## Chemical Analysis
-chemical info (type, category, etc), trends in chemical use and disposal 
-question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
 
-```{r chemical-info-dataset}
+chemical info (type, category, etc), trends in chemical use and disposal question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
+
+```{r chemical-info-dataset, echo = FALSE, message = FALSE}
 chemical_info <- tri_data %>% 
   select(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   arrange(chemical)
 ```
 
+```{r chemical-percent-calculations, echo = FALSE, message = FALSE}
+tri_data %>% 
+  select(chemical) %>% 
+  group_by(chemical) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
 
-## Pollution analysis
-trends in pollution, on-site vs off-site disposal
-question: what are the trends in pollution (chemical release) over the past 10 years?
+tri_data %>% 
+  select(elemental_metal_included) %>% 
+  group_by(elemental_metal_included) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
 
-```{r pollution-info-dataset}
-pollution_info <- tri_data %>% 
-  select(fugitive_air, stack_air, water, underground, underground_class_1, underground_class_2_through_5, landfills, land_treatment, surface_impoundment, other_disposal, on_site_release_total, public_treatment_total_transfer, off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, off_site_treated_total, total_transfer, total_releases, releases, on_site_contained, on_site_other, off_site_contain, off_site_other) %>% 
-  distinct(fugitive_air, stack_air, water, underground, underground_class_1, underground_class_2_through_5, landfills, land_treatment, surface_impoundment, other_disposal, on_site_release_total, public_treatment_total_transfer, off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, off_site_treated_total, total_transfer, total_releases, releases, on_site_contained, on_site_other, off_site_contain, off_site_other)
+tri_data %>% 
+  select(clean_air_act_chemical) %>% 
+  group_by(clean_air_act_chemical) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+
+tri_data %>% 
+  select(metal) %>% 
+  group_by(metal) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+
+tri_data %>% 
+  select(metal_category) %>% 
+  group_by(metal_category) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+
+tri_data %>% 
+  select(carcinogen) %>% 
+  group_by(carcinogen) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+
+tri_data %>% 
+  select(pbt) %>% 
+  group_by(pbt) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+
+tri_data %>% 
+  select(pfas) %>% 
+  group_by(pfas) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+```
+
+```{r carcinogen-pfas-pbt-chemicals, echo = FALSE, message = FALSE}
+chemical_info %>% 
+  select(chemical, carcinogen) %>% 
+  filter(carcinogen == "YES") %>% 
+  group_by(chemical)
+
+chemical_info %>% 
+  select(chemical, carcinogen) %>% 
+  filter(carcinogen == "NO") %>% 
+  group_by(chemical)
+
+chemical_info %>% 
+  select(chemical, pfas) %>% 
+  filter(pfas == "YES") %>% 
+  group_by(chemical)
+
+chemical_info %>% 
+  select(chemical, pfas) %>% 
+  filter(pfas == "NO") %>% 
+  group_by(chemical)
+
+chemical_info %>% 
+  select(chemical, pbt) %>% 
+  filter(pbt == "YES") %>% 
+  group_by(chemical)
+
+chemical_info %>% 
+  select(chemical, pbt) %>% 
+  filter(pbt == "NO") %>% 
+  group_by(chemical)
+```
+
+```{r chemical-trends-by-category, echo = FALSE, message = FALSE}
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = elemental_metal_included, color = elemental_metal_included, fill = elemental_metal_included)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = clean_air_act_chemical, color = clean_air_act_chemical, fill = clean_air_act_chemical)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = metal, color = metal, fill = metal)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = metal_category, color = metal_category, fill = metal_category)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = carcinogen, color = carcinogen, fill = carcinogen)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = pbt, color = pbt, fill = pbt)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = pfas, color = pfas, fill = pfas)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~year) 
+```
+
+```{r metal-category-pie-chart, echo = FALSE, message = FALSE}
+tri_data %>% 
+  group_by(metal_category) %>% 
+  summarise(prop = n()/nrow(tri_data)) %>% 
+  ggplot(aes(x = "", y = prop, fill = fct_inorder(metal_category))) +
+  geom_col(color = "white", linewidth = .3) +
+  geom_text(aes(x = "", y = prop, label = round(prop, 2)), position = position_stack(vjust = 0.5)) +
+ # geom_label_repel(aes(x = "", y = prop, label = paste0(prop, "%")), size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  coord_polar(theta = "y") +
+  scale_fill_viridis_d()
 ```
 
 
-## Conclusion
+## Pollution analysis
+
+trends in pollution, on-site vs off-site disposal question: what are the trends in pollution (chemical release) over the past 10 years?
+
+```{r pollution-info-dataset, echo = FALSE, message = FALSE}
+pollution_info <- tri_data %>% 
+  select(year, fugitive_air, stack_air, water, underground, underground_class_1, underground_class_2_through_5, landfills, land_treatment, surface_impoundment, other_disposal, on_site_release_total, public_treatment_total_transfer, off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, off_site_treated_total, total_transfer, total_releases, releases, on_site_contained, on_site_other, off_site_contain, off_site_other)
+```
+
+```{r pollution-by-on-site-release-type, echo = FALSE, message = FALSE}
+# Underground, landfills, and surface impoundment won't work with geom_smooth
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = fugitive_air)) + 
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = stack_air)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = water)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = underground)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = landfills)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = land_treatment)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = surface_impoundment)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+
+pollution_info %>% 
+  ggplot(aes(x = on_site_release_total, y = other_disposal)) +
+  geom_smooth() +
+  facet_wrap(~ year)
+```
+
+```{r pollution-by-general-category}
+pollution_info %>% 
+  ggplot(aes(x = year, y = on_site_release_total)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = public_treatment_total_transfer)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = off_site_release_total)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = off_site_recycled_total)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = off_site_energy_recovery_total)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = off_site_treated_total)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = total_transfer)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = total_releases)) + 
+  geom_smooth() 
+
+# Didn't work- why?
+pollution_info %>% 
+  ggplot(aes(x = year, y = releases)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = on_site_contained)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = on_site_other)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = off_site_contain)) + 
+  geom_smooth() 
+
+pollution_info %>% 
+  ggplot(aes(x = year, y = off_site_other)) + 
+  geom_smooth() 
+```
+
+```{r}
+tri_data %>%
+  filter(water > 0) %>%
+  ggplot(aes(x = log10(on_site_release_total), y = water/on_site_release_total, color = industry_sector_category)) +
+  geom_point(alpha = 0.3) +
+  scale_color_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+
+```{r}
+tri_data %>% 
+  ggplot(aes(y = industry_sector_category, x = water, fill = industry_sector_category)) +
+  geom_col(fill = "#1F948C")
+```
+
+
+# Detailed Analysis
+
+```{r create-analysis-data-frame}
+chemical_analysis_data <- tri_data %>% 
+  filter(chemical %in% c("Arsenic", "Styrene", "Formaldehyde", "Nickel", "Chromium", "Lead", "Mercury", "Ammonia", "Phosphorus (yellow or white)", "Hydrochloric acid (acid aerosols including mists, vapors, gas, fog, and other airborne forms of any particle size)", "Benzo[g,h,i]perylene"))
+```
+
+## Chemicals and Location
+
+
+##Chemicals and Pollution
+##Chemicals and Categories
+##Chemicals and Industry Sectors
+# Conclusion
+
 overview of data and conclusions about pollution and chemical use trends
