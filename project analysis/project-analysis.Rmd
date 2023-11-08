@@ -410,22 +410,38 @@ tri_data %>%
   facet_wrap(~ industry_sector_category)
 ```
 
-
-```{r}
+```{r industry-sector-category-water-release}
 tri_data %>% 
   ggplot(aes(y = industry_sector_category, x = water, fill = industry_sector_category)) +
   geom_col(fill = "#1F948C")
 ```
 
-
 # Detailed Analysis
 
 ```{r create-analysis-data-frame}
 chemical_analysis_data <- tri_data %>% 
-  filter(chemical %in% c("Arsenic", "Styrene", "Formaldehyde", "Nickel", "Chromium", "Lead", "Mercury", "Ammonia", "Phosphorus (yellow or white)", "Hydrochloric acid (acid aerosols including mists, vapors, gas, fog, and other airborne forms of any particle size)", "Benzo[g,h,i]perylene"))
+  filter(chemical %in% c("Arsenic", "Styrene", "Formaldehyde", "Nickel", "Chromium", "Lead", "Mercury", "Ammonia", "Phosphorus (yellow or white)", "Chloroform", "Benzo[g,h,i]perylene"))
 ```
 
 ## Chemicals and Location
+
+```{r}
+chemical_analysis_data %>% 
+  select(chemical, state) %>% 
+  group_by(state) %>% 
+  summarise(chemical_use = n(chemical)) %>% 
+  arrange(desc(chemical_use))
+```
+
+```{r}
+chemical_analysis_data %>% 
+  ggplot(aes(y = chemical, x = on_site_release_total, fill = industry_sector_category)) +
+  geom_col() +
+  scale_fill_viridis_d()
+
+chemical_analysis_data %>% 
+  
+```
 
 
 ##Chemicals and Pollution
