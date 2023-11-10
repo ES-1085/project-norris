@@ -521,32 +521,11 @@ tri_data %>%
 chemical_analysis_data <- tri_data %>% 
   filter(chemical %in% c("Arsenic", "Styrene", "Formaldehyde", "Nickel", "Chromium", "Lead", "Mercury", "Ammonia", "Phosphorus (yellow or white)", "Chloroform", "Benzo[g,h,i]perylene")) 
 
-# chemical_analysis_data <- chemical_analysis_data %>% 
-#  mutate(off_site_total %in% c("off_site_release_total", "off_site_recycled_total", "off_site_energy_recovery_total", "public_treatment_total_transfer", "off_site_treated_total", "total_transver", "off_site_contain", "off_site_other"))
+chemical_analysis_data <- chemical_analysis_data %>%
+  mutate(off_site_total = off_site_release_total + off_site_recycled_total + off_site_energy_recovery_total + public_treatment_total_transfer + off_site_treated_total + total_transfer + off_site_contain + off_site_other)
 
-# chemical_analysis_data <- chemical_analysis_data %>% 
-#  mutate(off_site_total = c("off_site_release_total", "off_site_recycled_total", "off_site_energy_recovery_total", "public_treatment_total_transfer", "off_site_treated_total", "total_transver", "off_site_contain", "off_site_other"))
-
-# chemical_analysis_data <- chemical_analysis_data %>% 
-#  mutate(off_site_total = sum(c("off_site_release_total", "off_site_recycled_total", "off_site_energy_recovery_total", "public_treatment_total_transfer", "off_site_treated_total", "total_transver", "off_site_contain", "off_site_other")))
-
-# chemical_analysis_data <- chemical_analysis_data %>% 
-#   mutate(off_site_total = c("off_site_release_total" + "off_site_recycled_total" + "off_site_energy_recovery_total" + "public_treatment_total_transfer" + "off_site_treated_total" + "total_transver" + "off_site_contain" + "off_site_other")))
-
-# chemical_analysis_data <- chemical_analysis_data %>% 
-#  mutate(off_site_total %in% c("off_site_release_total" + "off_site_recycled_total" + "off_site_energy_recovery_total" + "public_treatment_total_transfer" + "off_site_treated_total" + "total_transver" + "off_site_contain" + "off_site_other"))
-
-# chemical_analysis_data %>% 
-#   mutate(off_site_total == sum(c("off_site_release_total" + "off_site_recycled_total" + "off_site_energy_recovery_total" + "public_treatment_total_transfer" + "off_site_treated_total" + "total_transver" + "off_site_contain" + "off_site_other")))
-
-# chemical_analysis_data %>% 
-#   mutate(off_site_total = sum(c("off_site_release_total", "off_site_recycled_total", "off_site_energy_recovery_total", "public_treatment_total_transfer", "off_site_treated_total", "total_transver", "off_site_contain", "off_site_other")))
-
-# chemical_analysis_data %>% 
-#   mutate(off_site_total = sum("off_site_release_total" + "off_site_recycled_total" + "off_site_energy_recovery_total" + "public_treatment_total_transfer" + "off_site_treated_total" + "total_transver" + "off_site_contain" + "off_site_other"))
-
-# chemical_analysis_data %>% 
-#   sum(c(off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, public_treatment_total_transfer, off_site_treated_total, total_transver, off_site_contain, off_site_other))
+chemical_analysis_data <- chemical_analysis_data %>% 
+  mutate(on_site_total = fugitive_air + stack_air + water + underground + underground_class_1 + underground_class_2_through_5 + landfills + land_treatment + surface_impoundment + other_disposal + on_site_release_total + on_site_contained + on_site_other)
 ```
 
 
@@ -569,6 +548,21 @@ chemical_analysis_data %>%
   count(pfas, pbt, clean_air_act_chemical, carcinogen) %>% 
   arrange(chemical)
 ```
+
+
+### Overview graphs
+
+```{r}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_total, color = chemical, fill = chemical, alpha = 0.3)) +
+  geom_histogram(position = "dodge", binwidth = 75) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d()
+``` 
+
+
+
+
 ### Graphs of on-site disposal by type
 
 ```{r plot-fugitive-air-release-by-chemical}
@@ -645,24 +639,72 @@ chemical_analysis_data %>%
 
 ```{r plot-public-treatment-transfer-by-chemical}
 chemical_analysis_data %>% 
-  ggplot(aes(x = off_site_treated_total, y = public_treatment_total_transfer)) +
+  ggplot(aes(x = off_site_total, y = public_treatment_total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
 
-```{r plot-other-disposal-by-chemical}
+```{r plot-off-site-release-total-by-chemical}
 chemical_analysis_data %>% 
-  ggplot(aes(x = on_site_release_total, y = other_disposal)) +
+  ggplot(aes(x = off_site_total, y = off_site_release_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
+
+```{r plot-off-site-recycled-total-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_recycled_total)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r off-site-energy-recovery-total-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r off-site-treated-total-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-total-transfer-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = total_transfer)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-total-releases-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = total_releases)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+
+
+
 
 ###
-
 
 ```{r}
 #chemicals_and_states %>% 
