@@ -320,31 +320,51 @@ pollution_info %>%
   geom_smooth() +
   facet_wrap(~ year)
 
-pollution_info %>% 
-  ggplot(aes(x = on_site_release_total, y = underground)) +
-  geom_smooth() +
-  facet_wrap(~ year)
+# Underground is all 0s
+# pollution_info %>% 
+#   ggplot(aes(x = on_site_release_total, y = underground)) +
+#   geom_smooth() +
+#   facet_wrap(~ year)
 
-pollution_info %>% 
-  ggplot(aes(x = on_site_release_total, y = landfills)) +
-  geom_smooth() +
-  facet_wrap(~ year)
+ pollution_info %>% 
+   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
+   geom_smooth() +
+   facet_wrap(~ year)
+ 
+  pollution_info %>% 
+   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
+   geom_smooth() +
+   facet_wrap(~ year)
+
+# Landfill variable is all zeros
+# pollution_info %>% 
+#  ggplot(aes(x = on_site_release_total, y = landfills)) +
+#  geom_smooth() +
+#  facet_wrap(~ year)
 
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
   geom_smooth() +
   facet_wrap(~ year)
 
-pollution_info %>% 
-  ggplot(aes(x = on_site_release_total, y = surface_impoundment)) +
-  geom_smooth() +
-  facet_wrap(~ year)
+#Surface impoundment variable is all zeros
+# pollution_info %>% 
+#  ggplot(aes(x = on_site_release_total, y = surface_impoundment)) +
+#  geom_smooth() +
+#  facet_wrap(~ year)
 
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
   geom_smooth() +
   facet_wrap(~ year)
 ```
+
+```{r}
+pollution_info %>% 
+  ggplot(aes(x = year, y = on_site_release_total)) + 
+  geom_smooth() 
+```
+
 
 ```{r pollution-by-general-category}
 pollution_info %>% 
@@ -447,9 +467,13 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
-  geom_smooth(color = "#FDE333", n = 0.5) +
   scale_color_viridis_d() +
-  scale_fill_viridis_d()
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r}
+
 ```
 
 
@@ -469,7 +493,7 @@ chemicals_and_states %>%
   group_by(chemical) %>% 
   top_n(5, wt = chemical_use) %>%
  # arrange(chemical)
-  ggplot(aes(x = chemical_use, y = fct_relevel(state(c("TX", "OH", ))), fill = chemical)) +
+  ggplot(aes(x = chemical_use, y = state), fill = chemical) +
   geom_col() +
   scale_fill_viridis_d()
 ```
@@ -481,8 +505,6 @@ chemical_analysis_data %>%
   ggplot(aes(y = chemical, x = on_site_release_total, fill = industry_sector_category)) +
   geom_col() +
   scale_fill_viridis_d()
-
-chemical_analysis_data %>% 
   
 ```
 
