@@ -379,10 +379,10 @@ pollution_info %>%
   ggplot(aes(x = year, y = total_releases)) + 
   geom_smooth() 
 
-# Didn't work- why?
-pollution_info %>% 
-  ggplot(aes(x = year, y = releases)) + 
-  geom_smooth() 
+# Didn't work- why? Why is it all zeros?????
+# pollution_info %>% 
+#   ggplot(aes(x = year, y = releases)) + 
+#   geom_smooth() 
 
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_contained)) + 
@@ -426,12 +426,55 @@ chemical_analysis_data <- tri_data %>%
 ## Chemicals and Location
 
 ```{r}
-chemical_analysis_data %>% 
+chemicals_and_states <- chemical_analysis_data %>% 
   select(chemical, state) %>% 
-  group_by(state) %>% 
-  summarise(chemical_use = n(chemical)) %>% 
-  arrange(desc(chemical_use))
+  group_by(state, chemical)
 ```
+
+```{r}
+chemical_analysis_data %>% 
+  count(chemical) %>% 
+  arrange(desc(n))
+
+chemical_analysis_data %>% 
+  select(chemical, pfas, pbt, clean_air_act_chemical, carcinogen) %>% 
+  group_by(chemical) %>% 
+  count(pfas, pbt, clean_air_act_chemical, carcinogen) %>% 
+  arrange(chemical)
+```
+
+```{r}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_release_total, y = stack_air)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  geom_smooth(color = "#FDE333", n = 0.5) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d()
+```
+
+
+```{r}
+#chemicals_and_states %>% 
+#  select(state) %>% 
+
+chemical_analysis_data %>% 
+  select(state, chemical) %>% 
+  group_by(state) %>% 
+  summarise(chemical_amount = n_distinct(chemical)) %>% 
+  arrange(desc(chemical_amount))
+
+```
+```{r}
+chemicals_and_states %>% 
+  group_by(chemical) %>% 
+  top_n(5, wt = chemical_use) %>%
+ # arrange(chemical)
+  ggplot(aes(x = chemical_use, y = fct_relevel(state(c("TX", "OH", ))), fill = chemical)) +
+  geom_col() +
+  scale_fill_viridis_d()
+```
+
+
 
 ```{r}
 chemical_analysis_data %>% 
