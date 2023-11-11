@@ -36,11 +36,19 @@ library(lintr)
 tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 ```
 
-# Outline
-
 # Introduction
 
 introduction to dataset & summary stats introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
+
+---
+
+The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data. 
+
+Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. 
+
+Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
+
+TO BE ADDED TO.
 
 # Data Overview
 
