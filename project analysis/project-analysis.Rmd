@@ -551,23 +551,33 @@ chemical_analysis_data %>%
   select(chemical, pfas, pbt, clean_air_act_chemical, carcinogen) %>% 
   group_by(chemical) %>% 
   count(pfas, pbt, clean_air_act_chemical, carcinogen) %>% 
-  arrange(chemical)
+  arrange(desc(n))
 ```
 
-<<<<<<< HEAD
-```{r chem-analysis-facility-map, echo = FALSE, message = FALSE}
+```{r chemical-use-by-facility, echo = FALSE, message = FALSE}
 chemical_analysis_data %>% 
-  select(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, chemical) %>% 
-  distinct(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, chemical) %>% 
-  leaflet() %>% 
-  addTiles() %>% 
-    addCircleMarkers(lng = ~longitude, 
-                 lat = ~latitude, 
-                 clusterOptions = markerClusterOptions(),
-                 popup = ~paste0(facility_name, "<br>", parent_co_name, "<br>", industry_sector, "<br>", chemical, "<br>", city, ", ", state))
+  select(standard_parent_co_name, parent_co_name, facility_name, chemical) %>% 
+  group_by(standard_parent_co_name, parent_co_name, facility_name) %>% 
+  summarise(number_of_chemicals = n_distinct(chemical)) %>% 
+  arrange(desc(number_of_chemicals))
 ```
 
-```{r}
+```{r chem-analysis-facility-map, echo = FALSE, message = FALSE}
+# chemical_analysis_data %>% 
+#   label <- sprintf(facility_name, "<br>", parent_co_name, "<br>", industry_sector, "<br>", chemical, "<br>", city, ", ", state)
+# 
+# chemical_analysis_data %>% 
+#   select(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, chemical) %>% 
+#   distinct(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, .keep_all = TRUE) %>% 
+#   leaflet() %>% 
+#   addTiles() %>% 
+#     addCircleMarkers(lng = ~longitude, 
+#                  lat = ~latitude, 
+#                  clusterOptions = markerClusterOptions(),
+#                  label = label)
+```
+
+```{r chemical-use-on-tribal-lands}
 chemical_analysis_data %>% 
   group_by(tribal_yes_no, chemical) %>% 
   summarise(n = n()) %>% 
@@ -576,22 +586,50 @@ chemical_analysis_data %>%
   geom_col(position = "fill") +
   coord_flip() +
   scale_fill_viridis_d()
+
+chemical_analysis_data %>% 
+  select(chemical, tribal_yes_no) %>% 
+  count(chemical, tribal_yes_no)
+
+chemical_analysis_data %>% 
+  ggplot(aes(y = tribal_yes_no, fill = chemical)) +
+  geom_bar(position = "fill", color = "white") +
+  scale_fill_viridis_d()
 ```
-=======
+
+```{r}
+# chemical_analysis_data %>% 
+#   select(state, chemical) %>% 
+#   group_by(state) %>% 
+#   summarise(chemical_use = n_distinct(chemical)) %>% 
+#   arrange(desc(number_of_chemicals))
+```
+
 
 ### Overview graphs
 
-```{r}
+```{r chemical-category-graphs}
 chemical_analysis_data %>% 
-  ggplot(aes(x = on_site_total, color = chemical, fill = chemical, alpha = 0.3)) +
-  geom_histogram(position = "dodge", binwidth = 75) +
-  scale_color_viridis_d() +
+  ggplot(aes(y = fct_infreq(chemical), fill = pbt)) +
+  geom_bar() +
   scale_fill_viridis_d()
-``` 
 
+chemical_analysis_data %>% 
+  ggplot(aes(y = fct_infreq(chemical), fill = pfas)) +
+  geom_bar() +
+  scale_fill_viridis_d()
 
+chemical_analysis_data %>% 
+  ggplot(aes(y = fct_infreq(chemical), fill = carcinogen)) +
+  geom_bar() +
+  scale_fill_viridis_d()
 
->>>>>>> 6a5006feb32baa4a51203e82b2eaad5b3412b794
+chemical_analysis_data %>% 
+  ggplot(aes(y = fct_infreq(chemical), fill = clean_air_act_chemical)) +
+  geom_bar() +
+  scale_fill_viridis_d()
+```
+
 
 ### Graphs of on-site disposal by type
 
@@ -769,61 +807,6 @@ chemical_analysis_data %>%
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
-```
-
-
-
-
-
-###
-
->>>>>>> 6a5006feb32baa4a51203e82b2eaad5b3412b794
-```{r}
-#chemicals_and_states %>% 
-#  select(state) %>% 
-
-chemical_analysis_data %>% 
-  select(state, chemical) %>% 
-  group_by(state) %>% 
-  summarise(chemical_amount = n_distinct(chemical)) %>% 
-  arrange(desc(chemical_amount))
-
-```
-
-```{r}
-chemicals_and_states %>% 
-  group_by(chemical) %>% 
-  top_n(5, wt = chemical_use) %>%
- # arrange(chemical)
-  ggplot(aes(x = chemical_use, y = state), fill = chemical) +
-  geom_col() +
-  scale_fill_viridis_d()
-```
-
-```{r}
-chemical_analysis_data %>% 
-  ggplot(aes(y = chemical, x = on_site_release_total, fill = industry_sector_category)) +
-  geom_col() +
-  scale_fill_viridis_d()
-  
-```
-
-```{r}
-chemical_analysis_data %>% 
-  select(chemical, tribal_yes_no) %>% 
-  count(chemical, tribal_yes_no)
-
-chemical_analysis_data %>% 
-  ggplot(aes(y = tribal_yes_no, fill = chemical)) +
-  geom_bar(position = "fill", color = "white") +
-  scale_fill_viridis_d()
-```
-
-```{r}
-tri_data %>% 
-  select(year, chemical) %>% 
-  filter(year == "2021") %>% 
-  distinct(chemical)
 ```
 
 # Conclusion
