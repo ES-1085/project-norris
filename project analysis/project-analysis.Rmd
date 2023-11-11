@@ -40,6 +40,16 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 introduction to dataset & summary stats introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
 
+---
+
+The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data. 
+
+Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. 
+
+Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
+
+TO BE ADDED TO.
+
 # Data Overview
 
 ## Location Analysis
@@ -544,6 +554,7 @@ chemical_analysis_data %>%
   arrange(chemical)
 ```
 
+<<<<<<< HEAD
 ```{r chem-analysis-facility-map, echo = FALSE, message = FALSE}
 chemical_analysis_data %>% 
   select(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, chemical) %>% 
@@ -566,6 +577,21 @@ chemical_analysis_data %>%
   coord_flip() +
   scale_fill_viridis_d()
 ```
+=======
+
+### Overview graphs
+
+```{r}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_total, color = chemical, fill = chemical, alpha = 0.3)) +
+  geom_histogram(position = "dodge", binwidth = 75) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d()
+``` 
+
+
+
+>>>>>>> 6a5006feb32baa4a51203e82b2eaad5b3412b794
 
 ### Graphs of on-site disposal by type
 
@@ -667,6 +693,7 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
+<<<<<<< HEAD
 
 ```{r off-site-energy-recovery-total-by-chemical}
 chemical_analysis_data %>% 
@@ -706,6 +733,51 @@ chemical_analysis_data %>%
 
 ### 
 
+=======
+
+```{r off-site-energy-recovery-total-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r off-site-treated-total-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-total-transfer-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = total_transfer)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-total-releases-by-chemical}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = total_releases)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+
+
+
+
+###
+
+>>>>>>> 6a5006feb32baa4a51203e82b2eaad5b3412b794
 ```{r}
 #chemicals_and_states %>% 
 #  select(state) %>% 
