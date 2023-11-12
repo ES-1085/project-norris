@@ -237,7 +237,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = elemental_metal_included, color = elemental_metal_included, fill = elemental_metal_included)) +
+  ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -248,7 +248,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = clean_air_act_chemical, color = clean_air_act_chemical, fill = clean_air_act_chemical)) +
+  ggplot(aes(x = clean_air_act_chemical, fill = clean_air_act_chemical)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -259,7 +259,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = metal, color = metal, fill = metal)) +
+  ggplot(aes(x = metal, fill = metal)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -270,7 +270,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = metal_category, color = metal_category, fill = metal_category)) +
+  ggplot(aes(x = metal_category, fill = metal_category)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -281,7 +281,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = carcinogen, color = carcinogen, fill = carcinogen)) +
+  ggplot(aes(x = carcinogen, fill = carcinogen)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -292,7 +292,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = pbt, color = pbt, fill = pbt)) +
+  ggplot(aes(x = pbt, fill = pbt)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -303,7 +303,7 @@ tri_data %>%
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = pfas, color = pfas, fill = pfas)) +
+  ggplot(aes(x = pfas, fill = pfas)) +
   geom_bar() +
   coord_flip() +
   scale_fill_viridis_d() +
@@ -590,16 +590,16 @@ chemical_analysis_data %>%
   scale_fill_viridis_d()
 ```
 
-```{r chenmical-use-by-state,echo = FALSE, message = FALSE, warning = FALSE}
-# chemical_analysis_data %>% 
-#   select(state, chemical) %>% 
-#   group_by(state) %>% 
-#   summarise(chemical_use = n_distinct(chemical)) %>% 
-#   arrange(desc(number_of_chemicals))
+```{r chemical-use-by-state,echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>%
+  select(state, chemical) %>%
+  group_by(state) %>%
+  summarise(chemical_use = n_distinct(chemical)) %>%
+  arrange(desc(chemical_use))
 ```
 
 
-### Overview graphs
+## Chemical Release Graphs
 
 ```{r chemical-category-graphs, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
@@ -624,7 +624,7 @@ chemical_analysis_data %>%
 ```
 
 
-### Graphs of on-site disposal by type
+### Graphs of on-site release by type
 
 ```{r plot-fugitive-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
@@ -691,9 +691,29 @@ chemical_analysis_data %>%
 
 ```{r plot-on-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
-  ggplot(aes(y = chemical, x = on_site_release_total, fill = chemical)) +
+  ggplot(aes(x = on_site_release_total, y = chemical, fill = chemical)) +
   geom_col() +
   scale_fill_viridis_d()
+```
+
+### Graphs of on-site disposal by type
+
+```{r plot-on-site-contained-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_total, y = on_site_contained)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-on-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_total, y = on_site_other)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
 ```
 
 ### Graphs of off-site disposal by type
@@ -724,7 +744,6 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
-<<<<<<< HEAD
 
 ```{r off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
@@ -762,10 +781,6 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-### 
-
-=======
-
 ```{r off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
@@ -801,6 +816,222 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
+
+```{r plot-off-site-contain-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_contain)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-off-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_other)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+
+### Chemical Release Trends by Year
+
+```{r on-site-total-by-year}
+chemical_analysis_data %>% 
+  ggplot(aes(x = chemical, y = on_site_total, fill = chemical)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ year)
+```
+
+```{r off-site-total-by-year}
+chemical_analysis_data %>% 
+  ggplot(aes(x = chemical, y = off_site_total, fill = chemical)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ year)
+```
+
+```{r arsenic-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Arsenic") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Arsenic") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r styrene-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Styrene") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Styrene") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r formaldehyde-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Formaldehyde") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Formaldehyde") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r nickel-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Nickel") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Nickel") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r chromium-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Chromium") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Chromium") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r lead-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Lead") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Lead") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r mercury-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Mercury") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Mercury") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r ammonia-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Ammonia") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Ammonia") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r phosphorus-release-by-year}
+# chemical_analysis_data %>% 
+#   filter(chemical == "Phosphorus") %>% 
+#   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+#   geom_col(position = "dodge", just = 0.5) +
+#   scale_fill_viridis_d() +
+#   facet_wrap(~ industry_sector_category)
+
+# chemical_analysis_data %>% 
+#   filter(chemical == "Phosphorus") %>% 
+#   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+#   geom_col(position = "dodge", just = 0.5) +
+#   scale_fill_viridis_d() +
+#   facet_wrap(~ industry_sector_category)
+```
+
+```{r chloroform-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Chloroform") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Chloroform") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r benzo[g,h,i]perylene-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Benzo[g,h,i]perylene") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Benzo[g,h,i]perylene") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
 
 # Conclusion
 
