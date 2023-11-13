@@ -10,8 +10,11 @@ output: html_document
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(sf)
 library(htmltools)
+```
+
+
+```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(leafsync)
-library(rgeoboundaries)
 library(kableExtra)
 library(tidyverse)
 library(leaflet)
