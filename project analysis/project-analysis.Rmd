@@ -1102,6 +1102,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = chemical, y = on_site_total, fill = chemical)) +
   geom_col(position = "dodge") +
+  labs(title = "Total On Site By Chemical",
+       subtitle = "On Site Release, Storage, and Disposal",
+       x = "Chemical",
+       y = "On Site Total",
+       fill = "Chemical") +
+  theme_minimal() +
   coord_flip() +
   scale_fill_viridis_d() +
   facet_wrap(~ year)
