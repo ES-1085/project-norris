@@ -142,6 +142,12 @@ tri_data %>%
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector_category), fill = industry_sector_category)) +
   geom_bar() +
+  labs(title = "Industry Sector Prevalence",
+    subtitle = "Distribution of Industry Sector Categories in the TRI",
+    x = "Count",
+    y = "Industry Sector Category",
+    fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d()
 ```
 
@@ -151,7 +157,12 @@ tri_data %>%
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector), fill = carcinogen)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Carcinogen Use by Industry Sector",
+       x = "Count",
+       y = "Industry Sector",
+       fill = "Carcinogenic") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 ```
 
 ## Chemical Analysis
@@ -239,8 +250,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
   geom_bar() +
+  labs(title = "Elemental Metal Prevalence by Year",
+       x = "Count",
+       y = "Elemental Metal",
+       fill = "Elemental Metal") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
