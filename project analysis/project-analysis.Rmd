@@ -1,6 +1,6 @@
 ---
 title: "Project Analysis [insert catchy name here]"
-author: "Cedar and Joanna"
+author: "Cedar Callahan and Joanna Pittari"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -38,23 +38,17 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 # Introduction
 
-introduction to dataset & summary stats introduce primary research question: what is the relationship between industry sector and location, pollution, chemical use and has this shifted over the past 10 years?
-
----
-
 The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data. 
 
-Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. 
+Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
 
-Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
-
-TO BE ADDED TO.
+Our goal is to use what data we find (that is reasonably accurate given the circumstances) in order to identify the layout of these waste chemicals across the United States. To reach this, we must ask some guiding questions: What are the relationships between differing industry sectors and their growing or declining locations? Are there any shifts in the levels of overall pollution during the past decade, and are these changes set in any specific part of the country? Finally, how has chemical use and waste (as well as waste procedures) changed in the past decade, and what do we know about these chemicals from the EPA to infer their threat to human health?
 
 # Data Overview
 
 ## Location Analysis
 
-location of facilities, location trends, tribal lands, proximity question: how many facilities are located on tribal land and is there a significant difference in the type and amount of chemical release when compared to facilities not on tribal land?
+Our first question of locations deals with the trends of facilities' presence, whether or not they are on tribal land, and their proximity to each other (possibly by industry sector) -- which may help in assessing what is in the best interest of the people due to identifying the patterns of popularity at the same time as keeping safety and land protection a priority.
 
 ```{r facility-location-dataset, echo = FALSE, message = FALSE}
 facility_location <- tri_data %>% 
@@ -102,9 +96,13 @@ facility_location %>%
   summarise(percent = 100 * n()/nrow(facility_location))
 ```
 
+Using these visualizations, we have set up a groundwork map for chemical usage, which leads us to ask: knowing the drastic difference in percent of facilities on tribal land or not, does the location of tribal land have any effect on the type and amount of chemical release when compared to facilities not on tribal land?
+
+We can take points from history and U.S. law, knowing that tribes of the American West often do have significant health hazards due to the many power plants, factories, mines, waste dumps, and testing sites that are placed on their land -- sometimes with permission as a means of much-needed funds, and sometimes mandated.
+
 ## Industry Analysis
 
-industry sector trends (location, chemical use, pollution), changes in industry sector prevalence question: is there a correlation between industry sector and frequency of carcinogen, pfas, and pbt use?
+Within these questions of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 30 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence brings up the question: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
 
 ```{r industry-sector-dataset, echo = FALSE, message = FALSE}
 industry_info <- tri_data %>% 
@@ -135,7 +133,6 @@ tri_data %>%
  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
  arrange(desc(percent))
 ```
-
 #### Industry Sector Distribution Graph
 
 ```{r industry-sector-category-distribution}
@@ -155,7 +152,7 @@ tri_data %>%
 
 ## Chemical Analysis
 
-chemical info (type, category, etc), trends in chemical use and disposal question: is there a correlation between location and frequency of use of Clean Air Act chemicals?
+Honing our observational questions down to just chemical trends of use and disposal now, we see how the laws of the EPA inform chemical procedures. Specifically in terms of the Clean Air Act, is there a differing correlation between the location and frequency of these specially-listed chemicals when compared to chemicals not listed on the Clean Air Act? And more broadly, is there any type, category, or closely-watched category of chemical that is most common despite these laws?
 
 ```{r chemical-info-dataset, echo = FALSE, message = FALSE}
 chemical_info <- tri_data %>% 
@@ -171,7 +168,6 @@ tri_data %>%
   summarise(percent = 100 * n()/nrow(tri_data)) %>% 
   arrange(desc(percent))
 ```
-
 ### Chemical Category Calculations
 
 ```{r chemical-percent-elemental-metal-included, echo = FALSE, message = FALSE}
@@ -362,7 +358,7 @@ chemical_info %>%
 
 ## Pollution analysis
 
-trends in pollution, on-site vs off-site disposal question: what are the trends in pollution (chemical release) over the past 10 years?
+From these observed chemicals, there is still the question of their disposal after use. With air, ground, and water being the possible points of disposal, we must assess the trends in these differing types of waste removal. In the past decade, what are these trends in pollution due to chemical release, whether on-site or off?
 
 ```{r pollution-info-dataset, echo = FALSE, message = FALSE}
 pollution_info <- tri_data %>% 
@@ -373,7 +369,7 @@ pollution_info <- tri_data %>%
 
 #### By Type
 
-On-site release types: variables `Underground`, `Landfill`, and `Surace Impoundment` are all zeros
+On-site release types: variables `Underground`, `Landfill`, and `Surace Impoundment` are all zero.
 
 ```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE}
 pollution_info %>% 
@@ -434,7 +430,7 @@ pollution_info %>%
 
 ### Pollution by General Category (Including On-site-total)
 
-Pollution variable `Releases` is all zeros
+Pollution variable `Releases` is all zero.
 
 ```{r pollution-by-general-category}
 pollution_info %>% 
@@ -605,7 +601,6 @@ chemical_analysis_data %>%
 #   arrange(desc(number_of_chemicals))
 ```
 
-
 ### Overview graphs
 
 ```{r chemical-category-graphs}
@@ -629,7 +624,6 @@ chemical_analysis_data %>%
   geom_bar() +
   scale_fill_viridis_d()
 ```
-
 
 ### Graphs of on-site disposal by type
 
@@ -731,7 +725,6 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
-<<<<<<< HEAD
 
 ```{r off-site-energy-recovery-total-by-chemical}
 chemical_analysis_data %>% 
@@ -768,10 +761,6 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
-
-### 
-
-=======
 
 ```{r off-site-energy-recovery-total-by-chemical}
 chemical_analysis_data %>% 
@@ -811,4 +800,4 @@ chemical_analysis_data %>%
 
 # Conclusion
 
-overview of data and conclusions about pollution and chemical use trends
+In recognizing the increase of observations, increase in pollution trends, and the environment of increasingly strict reporting laws, we must be careful not to make the assumption that pollution is truly on the rise, and that conditions are getting worse in general. What the legal environment shows is an increase in control and recognition of needed chemical regulations. What the work shows is a very actively polluted environment irregardless of these laws, and the continued prevalence of chemicals that are known to have been used as weapons of war and for body-preservation and alteration -- clearly harmful to human health. This is not to say that there is no improvement, but that there surely is much more that must be done.
