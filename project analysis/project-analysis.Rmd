@@ -10,10 +10,6 @@ output: html_document
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(sf)
 library(htmltools)
-```
-
-
-```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(leafsync)
 library(kableExtra)
 library(tidyverse)
@@ -43,7 +39,7 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data. 
 
-Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
+Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade of 2011-2021 goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially-close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
 
 Our goal is to use what data we find (that is reasonably accurate given the circumstances) in order to identify the layout of these waste chemicals across the United States. To reach this, we must ask some guiding questions: What are the relationships between differing industry sectors and their growing or declining locations? Are there any shifts in the levels of overall pollution during the past decade, and are these changes set in any specific part of the country? Finally, how has chemical use and waste (as well as waste procedures) changed in the past decade, and what do we know about these chemicals from the EPA to infer their threat to human health?
 
@@ -81,7 +77,7 @@ tri_data %>%
 
 ### Map of Facilities
 
-The large majority of facilities in this dataset are located in North America, but a significant number of U.S.-owned facilities are strewn across the globe in other territories -- possibly shifting any inferences that can be made on the state of pollution solely in the U.S.
+The large majority of facilities in this dataset are located in North America, but a significant number of U.S.-owned facilities are strewn across the global map in other territories -- possibly shifting any inferences that can be made on the state of pollution solely in the U.S.
 
 ```{r facility-map, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -96,7 +92,7 @@ tri_data %>%
 
 ### Percent of Facilities on Tribal Land
 
-The percentage of facilities on tribal land is less than 1%, but this does not make it negligible as the impact still matters.
+The percentage of facilities on tribal land is less than 1%, but this does not make it negligible as the impact remains significant.
 
 ```{r percent-tribal-land, echo = FALSE, message = FALSE, warning = FALSE}
 facility_location %>% 
@@ -105,13 +101,13 @@ facility_location %>%
   summarise(percent = 100 * n()/nrow(facility_location))
 ```
 
-Using these tables, we have set up a groundwork map for chemical usage, which leads us to ask: knowing the drastic difference in percent of facilities on tribal land or not, does the location of tribal land have any effect on the type and amount of chemical release when compared to facilities not on tribal land?
+Using these tables, we have set up a groundwork map for placing chemical usage, which leads us to ask: knowing the drastic difference in percent of facilities on tribal land or not, does the location of tribal land have any effect on the type and amount of chemical release when compared to facilities not on tribal land?
 
-We can take points from history and U.S. law, knowing that tribes of the American West often do have significant health hazards due to the many power plants, factories, mines, waste dumps, and testing sites that are placed on their land -- sometimes with permission as a means to acquiring much-needed funds, and sometimes out of a tribe's power.
+We can take points from history and U.S. law, knowing that tribes of the American West often do have significant health hazards due to the many power plants, factories, mines, waste dumps, and testing sites that are placed on their land -- sometimes with permission as a means to acquiring much-needed funds, and sometimes out of a tribe's power. This question will appear further in visualizations.
 
 ## Industry Analysis
 
-Within these questions of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 11 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence brings up the question: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
+Within these observations of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 11 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence allows us to ask: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
 
 ```{r industry-sector-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 industry_info <- tri_data %>% 
@@ -135,17 +131,17 @@ tri_data <- tri_data %>%
 
 ### Industry Sector Distribution
 
-The most common purpose of a U.S. facility is chemical production, and the least common is apparel production which makes sense given trends in American imports -- though all clearly produce chemicals as waste as well.
-
 ```{r industry-sector-distribution, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
- select(industry_sector) %>% 
- group_by(industry_sector) %>%
+ select(industry_sector_category) %>% 
+ group_by(industry_sector_category) %>%
  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
  arrange(desc(percent))
 ```
 
 #### Industry Sector Distribution Graph
+
+The most common purpose of a U.S. facility is dealing with the production, waste, and wholesales of chemicals, accounting for almost 30% of U.S. industries as shown in the table. The least common accounting for about 0.4% is textile production which makes sense given trends in American imports.
 
 ```{r industry-sector-category-distribution, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -160,9 +156,9 @@ tri_data %>%
   scale_fill_viridis_d()
 ```
 
-### Carcinogen Percentage by Industry Sector (Graph)
+### Carcinogen Percentage by Industry Sector Graph
 
-Fitting with the most common industry sector, the chemical-producing facilities also use the most carcinogens (non-comprehensive), but the frequency seems to [almost] consistently grow with the prevalence of these sectors.
+Understandably fitting with the most common industry sector, the chemical-producing facilities also use the most carcinogens (non-comprehensive), but the frequency seems to [almost] consistently grow with the prevalence of these sectors. That being said, every sector listed has a chemical usage that is majority non-carcinogenic.
 
 ```{r industry-sector-and-carcinogen-use, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -178,7 +174,7 @@ tri_data %>%
 
 ## Chemical Analysis
 
-Honing our observational questions down to just chemical trends of use and disposal now, we see how the laws of the EPA inform chemical procedures. Specifically in terms of the Clean Air Act, is there a differing correlation between the location and frequency of these specially-listed chemicals when compared to chemicals not listed on the Clean Air Act? And more broadly, is there any type, category, or closely-watched category of chemical that is most common despite these laws?
+Honing our observational questions down to just chemical trends of use and disposal now, we see how the laws of the EPA inform chemical procedures. Specifically in terms of the Clean Air Act, is there a differing correlation between the location and frequency of these specially-listed chemicals when compared to chemicals not listed on the Clean Air Act? And more broadly, is there any type, category, or closely-watched category of chemical that is most common despite the efforts of these laws?
 
 ```{r chemical-info-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info <- tri_data %>% 
@@ -186,6 +182,8 @@ chemical_info <- tri_data %>%
   distinct(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   arrange(chemical)
 ```
+
+The most commonly used chemical is lead, accounting for over 5% of use, followed by its compounds that make up almost 4% of use. Lead is known to cause poisoning of the human body, leading to neurological and reproductive health issues as well as impaired function of the kidneys and other body systems. Poisoning can be acquired through contaminated dust particles and products, contaminated drinking water, and contaminated soil.
 
 ```{r chemical-percent, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -196,6 +194,8 @@ tri_data %>%
 ```
 
 ### Chemical Category Calculations
+
+The large majority of chemicals used are not elemental metals or metals in general. About 63% are identified in the Clean Air Act, leaving 37% not present. Over 28% of chemicals used in these facilities are known to be carcinogenic, 17% are PBTs, and 0.02% are PFAS'. These smaller percentages are still a concern, and are in-part new variables to track. PFAS did not have to be reported to the TRI until 2020 (making this decade of data insufficient), even though over 2,000 facilities were known to be producing them before the regulation. Therefore, it has far fewer observations in comparison to other chemicals though used since the 1940s and known to cause certain cancers, impairment of the immune system, reproductive issues, and abnormal developmental effects. The reporting threshold for that particular subset of chemicals is 100 pounds per year.
 
 ```{r chemical-percent-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -253,7 +253,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-#### Chemical Categories (Graphs)
+#### Chemical Categories Graphs
 
 ```{r chemical-trends-by-category-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -262,8 +262,8 @@ tri_data %>%
   ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
   geom_bar() +
   labs(title = "Elemental Metal Prevalence by Year",
-       x = "Count",
-       y = "Elemental Metal",
+       x = "Elemental Metal",
+       y = "Count",
        fill = "Elemental Metal") +
   theme_minimal() +
   coord_flip() +
@@ -278,8 +278,8 @@ tri_data %>%
   ggplot(aes(x = clean_air_act_chemical, fill = clean_air_act_chemical)) +
   geom_bar() +
   labs(title = "Clean Air Act Chemical Prevalence by Year",
-       x = "Count", 
-       y = "Clean Air Act Chemical",
+       x = "Clean Air Act Chemical", 
+       y = "Count",
        fill = "Clean Air Act Chemical") +
   theme_minimal() +
   coord_flip() +
@@ -294,8 +294,8 @@ tri_data %>%
   ggplot(aes(x = metal, fill = metal)) +
   geom_bar() +
   labs(title = "Metal Prevalence by Year",
-       x = "Count",
-       y = "Metal",
+       x = "Metal",
+       y = "Count",
        fill = "Metal") +
   theme_minimal() +
   coord_flip() +
@@ -310,8 +310,8 @@ tri_data %>%
   ggplot(aes(x = metal_category, fill = metal_category)) +
   geom_bar() +
   labs(title = "Metal Category Prevalence by Year",
-       x = "count",
-       y = "Metal Category",
+       x = "Metal Category",
+       y = "Count",
        fill = "Metal Category") +
   theme_minimal() +
   coord_flip() +
@@ -326,8 +326,8 @@ tri_data %>%
   ggplot(aes(x = carcinogen, fill = carcinogen)) +
   geom_bar() +
   labs(title = "Carcinogen Prevalence by Year",
-       x = "Count",
-       y = "Carcinogenic",
+       x = "Carcinogenic",
+       y = "Count",
        fill = "Carcinogenic") +
   theme_minimal() +
   coord_flip() +
@@ -342,8 +342,8 @@ tri_data %>%
   ggplot(aes(x = pbt, fill = pbt)) +
   geom_bar() +
   labs(title = "PBT Prevalence by Year",
-       x = "Count",
-       y = "PBT",
+       x = "PBT",
+       y = "Count",
        fill = "PBT") +
   theme_minimal() +
   coord_flip() +
@@ -358,14 +358,15 @@ tri_data %>%
   ggplot(aes(x = pfas, fill = pfas)) +
   geom_bar() +
   labs(title = "PFAS Prevalence by Year",
-       x = "Count",
-       y = "PFAS",
+       x = "PFAS",
+       y = "Count",
        fill = "PFAS") +
   theme_minimal() +
   coord_flip() +
   scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
+For above visualizations: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
 
 ##### Metal Category Pie Chart
 
@@ -387,43 +388,50 @@ tri_data %>%
 
 ### Chemical Categories
 
+There are `sum(tri_data$carcinogen == "YES")` carcinogens being observed -- a large number creating a small percentage.
+
 ```{r carcinogen-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+tri_data %>% 
   select(chemical, carcinogen) %>% 
   filter(carcinogen == "YES") %>% 
   group_by(chemical)
 ```
+There are `sum(tri_data$carcinogen == "NO")` non-carcinogens being observed.
 
 ```{r carcinogen-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+tri_data %>% 
   select(chemical, carcinogen) %>% 
   filter(carcinogen == "NO") %>% 
   group_by(chemical)
 ```
+There are `sum(tri_data$pfas == "YES")` observations of PFAS chemicals in the dataset.
 
 ```{r pfas-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+tri_data %>% 
   select(chemical, pfas) %>% 
   filter(pfas == "YES") %>% 
   group_by(chemical)
 ```
+There are `sum(tri_data$pfas == "NO")` observations of non-PFAS chemicals in the dataset.
 
 ```{r pfas-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+tri_data %>% 
   select(chemical, pfas) %>% 
   filter(pfas == "NO") %>% 
   group_by(chemical)
 ```
+There are `sum(tri_data$pbt == "YES")` observations of PBT chemicals in the dataset.
 
 ```{r pbt-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+tri_data %>% 
   select(chemical, pbt) %>% 
   filter(pbt == "YES") %>% 
   group_by(chemical)
 ```
+There are `sum(tri_data$pbt == "NO")` observations of non-PBT chemicals in the dataset.
 
 ```{r pbt-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+tri_data %>% 
   select(chemical, pbt) %>% 
   filter(pbt == "NO") %>% 
   group_by(chemical)
@@ -431,7 +439,7 @@ chemical_info %>%
 
 ## Pollution analysis
 
-From these observed chemicals, there is still the question of their disposal after use. With air, ground, and water being the possible points of disposal, we must assess the trends in these differing types of waste removal. In the past decade, what are these trends in pollution due to chemical release, whether on-site or off?
+From these distributions of observed chemicals, there is still the question of their disposal after use. With air, ground, and water being the possible points of disposal, we must assess the trends in these differing types of waste removal. In the past decade, what are these trends in pollution due to chemical release, whether on-site or off?
 
 ```{r pollution-info-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info <- tri_data %>% 
@@ -442,7 +450,7 @@ pollution_info <- tri_data %>%
 
 #### By Type
 
-On-site release types: variables `Underground`, `Landfill`, and `Surace Impoundment` are all zero.
+On-site release types: variables `Underground`, `Landfill`, and `Surface Impoundment` are all zero.
 
 ```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
@@ -1060,7 +1068,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
