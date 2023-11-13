@@ -142,6 +142,12 @@ tri_data %>%
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector_category), fill = industry_sector_category)) +
   geom_bar() +
+  labs(title = "Industry Sector Prevalence",
+    subtitle = "Distribution of Industry Sector Categories in the TRI",
+    x = "Count",
+    y = "Industry Sector Category",
+    fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d()
 ```
 
@@ -151,7 +157,12 @@ tri_data %>%
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector), fill = carcinogen)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Carcinogen Use by Industry Sector",
+       x = "Count",
+       y = "Industry Sector",
+       fill = "Carcinogenic") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 ```
 
 ## Chemical Analysis
@@ -239,8 +250,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
   geom_bar() +
+  labs(title = "Elemental Metal Prevalence by Year",
+       x = "Count",
+       y = "Elemental Metal",
+       fill = "Elemental Metal") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
@@ -250,8 +266,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = clean_air_act_chemical, fill = clean_air_act_chemical)) +
   geom_bar() +
+  labs(title = "Clean Air Act Chemical Prevalence by Year",
+       x = "Count", 
+       y = "Clean Air Act Chemical",
+       fill = "Clean Air Act Chemical") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
@@ -261,8 +282,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = metal, fill = metal)) +
   geom_bar() +
+  labs(title = "Metal Prevalence by Year",
+       x = "Count",
+       y = "Metal",
+       fill = "Metal") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
@@ -272,6 +298,11 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = metal_category, fill = metal_category)) +
   geom_bar() +
+  labs(title = "Metal Category Prevalence by Year",
+       x = "count",
+       y = "Metal Category",
+       fill = "Metal Category") +
+  theme_minimal() +
   coord_flip() +
   scale_fill_viridis_d() +
   facet_wrap(~year) 
@@ -283,8 +314,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = carcinogen, fill = carcinogen)) +
   geom_bar() +
+  labs(title = "Carcinogen Prevalence by Year",
+       x = "Count",
+       y = "Carcinogenic",
+       fill = "Carcinogenic") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
@@ -294,8 +330,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = pbt, fill = pbt)) +
   geom_bar() +
+  labs(title = "PBT Prevalence by Year",
+       x = "Count",
+       y = "PBT",
+       fill = "PBT") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
@@ -305,8 +346,13 @@ tri_data %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = pfas, fill = pfas)) +
   geom_bar() +
+  labs(title = "PFAS Prevalence by Year",
+       x = "Count",
+       y = "PFAS",
+       fill = "PFAS") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
@@ -319,9 +365,13 @@ tri_data %>%
   ggplot(aes(x = "", y = prop, fill = fct_inorder(metal_category))) +
   geom_col(color = "white", linewidth = .3) +
   geom_text(aes(x = "", y = prop, label = round(prop, 2)), position = position_stack(vjust = 0.5)) +
- # geom_label_repel(aes(x = "", y = prop, label = paste0(prop, "%")), size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  labs(title = "Metal Category Distribution",
+       x = "",
+       y = "", 
+       fill = "Metal Category") +
+  theme_void() +
   coord_polar(theta = "y") +
-  scale_fill_viridis_d()
+  scale_fill_viridis_d(begin = 0.4, end = 0.9)
 ```
 
 ### Chemical Categories
@@ -385,50 +435,78 @@ On-site release types: variables `Underground`, `Landfill`, and `Surace Impoundm
 
 ```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
-  ggplot(aes(x = on_site_release_total, y = fugitive_air)) + 
-  geom_smooth() +
+  ggplot(aes(x = on_site_release_total, y = fugitive_air, color = fugitive_air, fill = fugitive_air)) + 
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs(title = "Fugitive Air Release by Year",
+       x = "On Site Release Total",
+       y = "Fugitive Air") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
 ```{r pollution-by-on-site-release-stack-air, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
-  geom_smooth() +
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs(title = "Stack Air Release by Year",
+       x = "On Site Release Total",
+       y = "Stack Air") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
 ```{r pollution-by-on-site-release-water, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = water)) +
-  geom_smooth() +
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs("Water Release by Year",
+       x = "On Site Release Total",
+       y = "Water") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
 ```{r pollution-by-on-site-release-underground-class-1, echo = FALSE, message = FALSE, warning = FALSE}
  pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
-  geom_smooth() +
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs(title = "Underground Class 1 Releases by Year",
+       x = "On Site Release Total",
+       y = "Underground Class 1") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
 ```{r pollution-by-on-site-release-underground-class-2-to-5, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
-  geom_smooth() +
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs(title = "Underground Class 2 Through 5 Release by Year",
+       x = "On Site Release Total",
+       y = "Underground Class 2 Through 5") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
 ```{r pollution-by-on-site-release-land-treatment, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
-  geom_smooth() +
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs(title = "Land Treatment by Year",
+       x = "On Site Release Total",
+       y = "Land Treatment") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
 ```{r pollution-by-on-site-release-other-disposal, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
-  geom_smooth() +
+  geom_smooth(color = "#00608E", linewidth = 0.6) +
+  labs(title = "Other Disposal by Year",
+       x = "On Site Release Total",
+       y = "Other Disposal") +
+  theme_minimal() +
   facet_wrap(~ year)
 ```
 
@@ -437,7 +515,11 @@ pollution_info %>%
 ```{r on-site-release-total-by-year, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_release_total)) + 
-  geom_violin()
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "On Site Release Total from 2011 to 2021",
+       x = "Year",
+       y = "On Site Release Total") +
+  theme_minimal() 
 ```
 
 ### Pollution by General Category (Including On-site-total)
@@ -447,73 +529,120 @@ Pollution variable `Releases` is all zeros
 ```{r pollution-by-general-category, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_release_total)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "On Site Release Total by Year",
+       x = "Year",
+       y = "On Site Release Total") +
+  theme_minimal()
 ```
 
 ```{r pollution-public-treatment-total-transfer, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = public_treatment_total_transfer)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Total Transfer to Public Treatment by Year",
+       x = "Year",
+       y = "Total Transfer to Public Treatment") +
+  theme_minimal()
 ```
 
 ```{r pollution-off-site-release-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_release_total)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Off Site Release Total by Year",
+       x = "Year",
+       y = "Off Site Release Total") +
+  theme_minimal()
 ```
 
 ```{r pollution-off-site-recycled-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_recycled_total)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Total Recycled Off Site by Year",
+       x = "year",
+       y = "Total Recycled Off Site") +
+  theme_minimal()
 ```
 
 ```{r pollution-off-site-energy-recovery-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_energy_recovery_total)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Total Energy Recovery Off Site by Year",
+       x = "Year",
+       y = "Total Energy Recovery Off Site") +
+  theme_minimal()
 ```
 
 ```{r pollution-off-site-treated-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_treated_total)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Total Treated Off Site by Year",
+       x = "Year",
+       y = "Total Treated Off Site") +
+  theme_minimal()
 ```
 
 ```{r pollution-total-transfer, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = total_transfer)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Total Transfered by Year",
+       x = "Year",
+       y = "Total Transfered") +
+  theme_minimal()
 ```
 
 ```{r pollution-total-releases, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = total_releases)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Total Released by Year",
+       x = "Year", 
+       y = "Total Released")
 ```
 
 ```{r pollution-on-site-contained, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_contained)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Amount Contained On Site By Year",
+       x = "Year",
+       y = "Amount Contained On Site") +
+  theme_minimal()
 ```
 
 ```{r pollution-on-site-other, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_other)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "On Site 'Other' by Year",
+       x = "Year",
+       y = "On Site 'Other'") +
+  theme_minimal()
 ```
 
 ```{r pollution-off-site-contain, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_contain)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Contained Off Site by Year",
+       x = "Year",
+       y = "Contained Off Site") +
+  theme_minimal()
 ```
 
 ```{r pollution-off-site-other, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_other)) + 
-  geom_smooth() 
+  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  labs(title = "Off Site 'Other' by Year",
+       x = "Year",
+       y = "Off Site 'Other'") +
+  theme_minimal()
 ```
 
 ### Pollution: Water/on-site-release-total
@@ -523,6 +652,11 @@ tri_data %>%
   filter(water > 0) %>%
   ggplot(aes(x = log10(on_site_release_total), y = water/on_site_release_total, color = industry_sector_category)) +
   geom_point(alpha = 0.3) +
+  labs(title = "",
+       x = "",
+       y = "",
+       color = "")
+  theme_minimal() +
   scale_color_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -532,7 +666,13 @@ tri_data %>%
 ```{r industry-sector-category-water-release, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   ggplot(aes(y = industry_sector_category, x = water, fill = industry_sector_category)) +
-  geom_col(fill = "#1F948C")
+  geom_col() +
+  labs(title = "Water Release by Industry Sector Category",
+       x = "Water",
+       y = "Industry Sector Category",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d()
 ```
 
 # Detailed Analysis
@@ -577,8 +717,13 @@ chemical_analysis_data %>%
   mutate(prop = n/sum(n)) %>% 
   ggplot(aes(x = chemical, y = prop, fill = tribal_yes_no)) +
   geom_col(position = "fill") +
+  labs(title = "Chemical Use On and Off Tribal Lands",
+       subtitle = "by chemical",
+       x = "Chemical",
+       y = "Proportion") +
+  theme_minimal() +
   coord_flip() +
-  scale_fill_viridis_d()
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
   select(chemical, tribal_yes_no) %>% 
@@ -587,6 +732,10 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(y = tribal_yes_no, fill = chemical)) +
   geom_bar(position = "fill", color = "white") +
+  labs(title = "Chemical Use On and Off Tribal Lands",
+       subtitle = "by tribal and not tribal land",
+       y = "Tribal Land?") +
+  theme_minimal() +
   scale_fill_viridis_d()
 ```
 
@@ -605,22 +754,38 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(y = fct_infreq(chemical), fill = pbt)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Is This Chemical a PBT?",
+       y = "Chemical",
+       fill = "PBT") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
   ggplot(aes(y = fct_infreq(chemical), fill = pfas)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Is This Chemical a PFAS?",
+       y = "Chemical",
+       fill = "PFAS") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
   ggplot(aes(y = fct_infreq(chemical), fill = carcinogen)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Is This Chemical Carcinogenic?",
+       y = "Chemical",
+       fill = "Carcinogenic") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
   ggplot(aes(y = fct_infreq(chemical), fill = clean_air_act_chemical)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Is This Chemical Included in the Clean Air Act?",
+       y = "Chemical",
+       fill = "Clean Air Act Chemical?") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 ```
 
 
@@ -630,6 +795,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = fugitive_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Fugitive Air in On Site Release Total",
+       x = "On Site Release Total",
+       y = "Fugitive Air",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -639,6 +810,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Stack Air in On Site Release Total",
+       x = "On Site Release Total",
+       y = "Stack Air",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -648,6 +825,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = water)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Water in On Site Release Total",
+       x = "On Site Release Total",
+       y = "Water",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -657,6 +840,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Underground Class 1 in On Site Release Total",
+       x = "On Site Release Total",
+       y = "Underground Class 1",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -666,6 +855,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Underground Class 2 through 5 in On Site Release Total",
+       x = "On Site Release Total",
+       y = "Underground Class 2 through 5",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -675,6 +870,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Land Treatment in On Site Release Total",
+       x = "On Site Release Total",
+       y = "Land Treatment",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -684,6 +885,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "'Other' Disposal in On Site Release Total",
+       x = "On Site Release Total",
+       y = "'Other' Disposal",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -693,6 +900,11 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = chemical, fill = chemical)) +
   geom_col() +
+  labs(title = "On Site Release Total by Chemical",
+       x = "On Site Release Total",
+       y = "Chemical",
+       fill = "Chemical") +
+  theme_minimal() +
   scale_fill_viridis_d()
 ```
 
@@ -702,6 +914,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_total, y = on_site_contained)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Contained On Site by Chemical",
+       x = "On Site Total",
+       y = "On Site Contained",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -711,6 +929,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_total, y = on_site_other)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "On Site 'Other' and On Site Total",
+       x = "On Site Total",
+       y = "On Site 'Other'",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -722,6 +946,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = public_treatment_total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Transfered to Public Treatment and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Transfered to Public Treatment",
+       color = "Chemical",
+       alpha = "Saturation")  +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -731,6 +961,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_release_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Off Site Release Total and Off Site Total",
+       x = "Off Site Total",
+       y = "Off Site Release Total",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -740,6 +976,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_recycled_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Recycled off Site and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Recycled Off Site",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -749,6 +991,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Energy Recovered Off Site and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Energy Recovered Off Site",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -758,6 +1006,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Treated Off Site and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Treated Off Site",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -767,6 +1021,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Transfered and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Transfered",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -776,6 +1036,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_releases)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Released and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Released",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -785,33 +1051,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
-  scale_color_viridis_d() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ chemical)
-```
-
-```{r off-site-treated-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_analysis_data %>% 
-  ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
-  geom_point(aes(alpha = 0.3, color = chemical)) +
-  scale_color_viridis_d() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ chemical)
-```
-
-```{r plot-total-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_analysis_data %>% 
-  ggplot(aes(x = off_site_total, y = total_transfer)) +
-  geom_point(aes(alpha = 0.3, color = chemical)) +
-  scale_color_viridis_d() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ chemical)
-```
-
-```{r plot-total-releases-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_analysis_data %>% 
-  ggplot(aes(x = off_site_total, y = total_releases)) +
-  geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Energy Recovered and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Energy Recovered",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -821,6 +1066,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_contain)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Total Contained Off Site and Off Site Total",
+       x = "Off Site Total",
+       y = "Total Contained Off Site",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
@@ -830,6 +1081,12 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_other)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
+  labs(title = "Off Site 'Other' and Off Site Total",
+       x = "Off Site Total",
+       y = "Off Site 'Other'",
+       color = "Chemical",
+       alpha = "Saturation") +
+  theme_minimal() +
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
