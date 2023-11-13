@@ -11,7 +11,6 @@ output: html_document
 library(sf)
 library(htmltools)
 library(leafsync)
-library(rgeoboundaries)
 library(kableExtra)
 library(tidyverse)
 library(leaflet)
@@ -66,6 +65,8 @@ tri_data <- tri_data %>%
 
 ### Number of Facilities Owned by Each Company
 
+The five most common parent companies are as follows: U.S. Department of Defense, CRH Americas Inc, Cemex Inc, Argos U.S. Corp, and Berkshire Hathaway Inc. The first listed is a government agency responsible for U.S. military protection, followed by four different building/construction/transport materials companies.
+
 ```{r number-of-facilities, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(standard_parent_co_name, parent_co_name, facility_name) %>% 
@@ -75,6 +76,8 @@ tri_data %>%
 ```
 
 ### Map of Facilities
+
+The large majority of facilities in this dataset are located in North America, but a significant number of U.S.-owned facilities are strewn across the globe in other territories -- possibly shifting any inferences that can be made on the state of pollution solely in the U.S.
 
 ```{r facility-map, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
