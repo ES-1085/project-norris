@@ -32,7 +32,7 @@ library(styler)
 library(lintr)
 ```
 
-```{r data-read-in}
+```{r data-read-in, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 ```
 
@@ -50,7 +50,7 @@ Our goal is to use what data we find (that is reasonably accurate given the circ
 
 Our first question of locations deals with the trends of facilities' presence, whether or not they are on tribal land, and their proximity to each other (possibly by industry sector) -- which may help in assessing what is in the best interest of the people due to identifying the patterns of popularity at the same time as keeping safety and land protection a priority.
 
-```{r facility-location-dataset, echo = FALSE, message = FALSE}
+```{r facility-location-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 facility_location <- tri_data %>% 
   select("facility_name", "street_address", "city", "county", "state", "zip_code", "bia_code", "tribal_land", "latitude", "longitude") %>% 
   distinct()
@@ -66,7 +66,7 @@ tri_data <- tri_data %>%
 
 ### Number of Facilities Owned by Each Company
 
-```{r number-of-facilities, echo = FALSE, message = FALSE}
+```{r number-of-facilities, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(standard_parent_co_name, parent_co_name, facility_name) %>% 
   group_by(standard_parent_co_name, parent_co_name) %>% 
@@ -76,7 +76,7 @@ tri_data %>%
 
 ### Map of Facilities
 
-```{r facility-map, echo = FALSE, message = FALSE}
+```{r facility-map, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   distinct(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state) %>% 
   leaflet() %>% 
@@ -89,7 +89,7 @@ tri_data %>%
 
 ### Percent of Facilities on Tribal Land
 
-```{r percent-tribal-land, echo = FALSE, message = FALSE}
+```{r percent-tribal-land, echo = FALSE, message = FALSE, warning = FALSE}
 facility_location %>% 
   select(tribal_yes_no) %>% 
   group_by(tribal_yes_no) %>%
@@ -104,13 +104,13 @@ We can take points from history and U.S. law, knowing that tribes of the America
 
 Within these questions of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 30 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence brings up the question: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
 
-```{r industry-sector-dataset, echo = FALSE, message = FALSE}
+```{r industry-sector-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 industry_info <- tri_data %>% 
   select(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain) %>% 
   distinct(industry_sector, state, clean_air_act_chemical, carcinogen, metal_category, pbt, pfas, on_site_release_total, off_site_release_total, on_site_contained, off_site_contain)
 ```
 
-```{r industry-sector-categories}
+```{r industry-sector-categories, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data <- tri_data %>% 
   mutate(industry_sector_category = case_when(industry_sector %in% c("Tobacco", "Beverages", "Food") ~ "Agriculture and Food Processing",
   industry_sector %in% c("Electrical Equipment", "Transportation Equipment", "Machinery", "Computers and Electronic     Products") ~ "Machinery and Technology",
@@ -126,51 +126,65 @@ tri_data <- tri_data %>%
 
 ### Industry Sector Distribution
 
-```{r industry-sector-distribution, echo = FALSE, message = FALSE}
+```{r industry-sector-distribution, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
  select(industry_sector) %>% 
  group_by(industry_sector) %>%
  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
  arrange(desc(percent))
 ```
+
 #### Industry Sector Distribution Graph
 
-```{r industry-sector-category-distribution}
+```{r industry-sector-category-distribution, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector_category), fill = industry_sector_category)) +
-  geom_bar(fill = "#1F948C")
+  geom_bar() +
+  labs(title = "Industry Sector Prevalence",
+    subtitle = "Distribution of Industry Sector Categories in the TRI",
+    x = "Count",
+    y = "Industry Sector Category",
+    fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d()
 ```
 
 ### Carcinogen Percentage by Industry Sector (Graph)
 
-```{r}
+```{r industry-sector-and-carcinogen-use, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector), fill = carcinogen)) +
   geom_bar() +
-  scale_fill_viridis_d()
+  labs(title = "Carcinogen Use by Industry Sector",
+       x = "Count",
+       y = "Industry Sector",
+       fill = "Carcinogenic") +
+  theme_minimal() +
+  scale_fill_viridis_d(begin = 0.4, end = 1)
 ```
 
 ## Chemical Analysis
 
 Honing our observational questions down to just chemical trends of use and disposal now, we see how the laws of the EPA inform chemical procedures. Specifically in terms of the Clean Air Act, is there a differing correlation between the location and frequency of these specially-listed chemicals when compared to chemicals not listed on the Clean Air Act? And more broadly, is there any type, category, or closely-watched category of chemical that is most common despite these laws?
 
-```{r chemical-info-dataset, echo = FALSE, message = FALSE}
+```{r chemical-info-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info <- tri_data %>% 
   select(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   arrange(chemical)
 ```
 
-```{r chemical-percent, echo = FALSE, message = FALSE}
+```{r chemical-percent, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(chemical) %>% 
   group_by(chemical) %>%
   summarise(percent = 100 * n()/nrow(tri_data)) %>% 
   arrange(desc(percent))
 ```
+
 ### Chemical Category Calculations
 
-```{r chemical-percent-elemental-metal-included, echo = FALSE, message = FALSE}
+```{r chemical-percent-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(elemental_metal_included) %>% 
   group_by(elemental_metal_included) %>%
@@ -178,7 +192,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-```{r chemical-percent-clean-air-act, echo = FALSE, message = FALSE}
+```{r chemical-percent-clean-air-act, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(clean_air_act_chemical) %>% 
   group_by(clean_air_act_chemical) %>%
@@ -186,7 +200,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-```{r chemical-percent-metal, echo = FALSE, message = FALSE}
+```{r chemical-percent-metal, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(metal) %>% 
   group_by(metal) %>%
@@ -194,7 +208,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-```{r chemical-percent-metal-category, echo = FALSE, message = FALSE}
+```{r chemical-percent-metal-category, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(metal_category) %>% 
   group_by(metal_category) %>%
@@ -202,7 +216,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-```{r chemical-percent-carcinogen, echo = FALSE, message = FALSE}
+```{r chemical-percent-carcinogen, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(carcinogen) %>% 
   group_by(carcinogen) %>%
@@ -210,7 +224,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-```{r chemical-percent-pbt, echo = FALSE, message = FALSE}
+```{r chemical-percent-pbt, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(pbt) %>% 
   group_by(pbt) %>%
@@ -218,7 +232,7 @@ tri_data %>%
   arrange(desc(percent))
 ```
 
-```{r chemical-percent-pfas, echo = FALSE, message = FALSE}
+```{r chemical-percent-pfas, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(pfas) %>% 
   group_by(pfas) %>%
@@ -228,79 +242,91 @@ tri_data %>%
 
 #### Chemical Categories (Graphs)
 
-```{r chemical-trends-by-category-elemental-metal-included, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = elemental_metal_included, color = elemental_metal_included, fill = elemental_metal_included)) +
+  ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
   geom_bar() +
+  labs(title = "Elemental Metal Prevalence by Year",
+       x = "Count",
+       y = "Elemental Metal",
+       fill = "Elemental Metal") +
+  theme_minimal() +
   coord_flip() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-clean-air-act, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-clean-air-act, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = clean_air_act_chemical, color = clean_air_act_chemical, fill = clean_air_act_chemical)) +
+  ggplot(aes(x = clean_air_act_chemical, fill = clean_air_act_chemical)) +
   geom_bar() +
   coord_flip() +
+  scale_fill_viridis_d() +
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-metal, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-metal, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = metal, color = metal, fill = metal)) +
+  ggplot(aes(x = metal, fill = metal)) +
   geom_bar() +
   coord_flip() +
+  scale_fill_viridis_d() +
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-metal-category, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-metal-category, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = metal_category, color = metal_category, fill = metal_category)) +
+  ggplot(aes(x = metal_category, fill = metal_category)) +
   geom_bar() +
   coord_flip() +
+  scale_fill_viridis_d() +
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-carcinogen, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-carcinogen, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = carcinogen, color = carcinogen, fill = carcinogen)) +
+  ggplot(aes(x = carcinogen, fill = carcinogen)) +
   geom_bar() +
   coord_flip() +
+  scale_fill_viridis_d() +
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = pbt, color = pbt, fill = pbt)) +
+  ggplot(aes(x = pbt, fill = pbt)) +
   geom_bar() +
   coord_flip() +
+  scale_fill_viridis_d() +
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE}
+```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = pfas, color = pfas, fill = pfas)) +
+  ggplot(aes(x = pfas, fill = pfas)) +
   geom_bar() +
   coord_flip() +
+  scale_fill_viridis_d() +
   facet_wrap(~year) 
 ```
 
 ##### Metal Category Pie Chart
 
-```{r metal-category-pie-chart, echo = FALSE, message = FALSE}
+```{r metal-category-pie-chart, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   group_by(metal_category) %>% 
   summarise(prop = n()/nrow(tri_data)) %>% 
@@ -314,42 +340,42 @@ tri_data %>%
 
 ### Chemical Categories
 
-```{r carcinogen-percent-yes, echo = FALSE, message = FALSE}
+```{r carcinogen-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(chemical, carcinogen) %>% 
   filter(carcinogen == "YES") %>% 
   group_by(chemical)
 ```
 
-```{r carcinogen-percent-no, echo = FALSE, message = FALSE}
+```{r carcinogen-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(chemical, carcinogen) %>% 
   filter(carcinogen == "NO") %>% 
   group_by(chemical)
 ```
 
-```{r pfas-percent-yes, echo = FALSE, message = FALSE}
+```{r pfas-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(chemical, pfas) %>% 
   filter(pfas == "YES") %>% 
   group_by(chemical)
 ```
 
-```{r pfas-percent-no, echo = FALSE, message = FALSE}
+```{r pfas-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(chemical, pfas) %>% 
   filter(pfas == "NO") %>% 
   group_by(chemical)
 ```
 
-```{r pbt-percent-yes, echo = FALSE, message = FALSE}
+```{r pbt-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(chemical, pbt) %>% 
   filter(pbt == "YES") %>% 
   group_by(chemical)
 ```
 
-```{r pbt-percent-no, echo = FALSE, message = FALSE}
+```{r pbt-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(chemical, pbt) %>% 
   filter(pbt == "NO") %>% 
@@ -360,7 +386,7 @@ chemical_info %>%
 
 From these observed chemicals, there is still the question of their disposal after use. With air, ground, and water being the possible points of disposal, we must assess the trends in these differing types of waste removal. In the past decade, what are these trends in pollution due to chemical release, whether on-site or off?
 
-```{r pollution-info-dataset, echo = FALSE, message = FALSE}
+```{r pollution-info-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info <- tri_data %>% 
   select(year, fugitive_air, stack_air, water, underground, underground_class_1, underground_class_2_through_5, landfills, land_treatment, surface_impoundment, other_disposal, on_site_release_total, public_treatment_total_transfer, off_site_release_total, off_site_recycled_total, off_site_energy_recovery_total, off_site_treated_total, total_transfer, total_releases, releases, on_site_contained, on_site_other, off_site_contain, off_site_other)
 ```
@@ -371,49 +397,49 @@ pollution_info <- tri_data %>%
 
 On-site release types: variables `Underground`, `Landfill`, and `Surace Impoundment` are all zero.
 
-```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = fugitive_air)) + 
   geom_smooth() +
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-stack-air, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-stack-air, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
   geom_smooth() +
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-water, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-water, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = water)) +
   geom_smooth() +
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-underground-class-1, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-underground-class-1, echo = FALSE, message = FALSE, warning = FALSE}
  pollution_info %>% 
-   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
-   geom_smooth() +
-   facet_wrap(~ year)
+  ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
+  geom_smooth() +
+  facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-underground-class-2-to-5, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-underground-class-2-to-5, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
   geom_smooth() +
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-land-treatment, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-land-treatment, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
   geom_smooth() +
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-other-disposal, echo = FALSE, message = FALSE}
+```{r pollution-by-on-site-release-other-disposal, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
   geom_smooth() +
@@ -422,83 +448,83 @@ pollution_info %>%
 
 #### By Year
 
-```{r on-site-release-total-by-year, echo = FALSE, message = FALSE}
+```{r on-site-release-total-by-year, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_release_total)) + 
-  geom_smooth() 
+  geom_violin()
 ```
 
 ### Pollution by General Category (Including On-site-total)
 
 Pollution variable `Releases` is all zero.
 
-```{r pollution-by-general-category}
+```{r pollution-by-general-category, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_release_total)) + 
   geom_smooth() 
 ```
 
-```{r pollution-public-treatment-total-transfer}
+```{r pollution-public-treatment-total-transfer, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = public_treatment_total_transfer)) + 
   geom_smooth() 
 ```
 
-```{r pollution-off-site-release-total}
+```{r pollution-off-site-release-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_release_total)) + 
   geom_smooth() 
 ```
 
-```{r pollution-off-site-recycled-total}
+```{r pollution-off-site-recycled-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_recycled_total)) + 
   geom_smooth() 
 ```
 
-```{r pollution-off-site-energy-recovery-total}
+```{r pollution-off-site-energy-recovery-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_energy_recovery_total)) + 
   geom_smooth() 
 ```
 
-```{r pollution-off-site-treated-total}
+```{r pollution-off-site-treated-total, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_treated_total)) + 
   geom_smooth() 
 ```
 
-```{r pollution-total-transfer}
+```{r pollution-total-transfer, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = total_transfer)) + 
   geom_smooth() 
 ```
 
-```{r pollution-total-releases}
+```{r pollution-total-releases, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = total_releases)) + 
   geom_smooth() 
 ```
 
-```{r pollution-on-site-contained}
+```{r pollution-on-site-contained, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_contained)) + 
   geom_smooth() 
 ```
 
-```{r pollution-on-site-other}
+```{r pollution-on-site-other, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_other)) + 
   geom_smooth() 
 ```
 
-```{r pollution-off-site-contain}
+```{r pollution-off-site-contain, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_contain)) + 
   geom_smooth() 
 ```
 
-```{r pollution-off-site-other}
+```{r pollution-off-site-other, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = off_site_other)) + 
   geom_smooth() 
@@ -506,7 +532,7 @@ pollution_info %>%
 
 ### Pollution: Water/on-site-release-total
 
-```{r pollution-water-log-graph}
+```{r pollution-water-log-graph, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>%
   filter(water > 0) %>%
   ggplot(aes(x = log10(on_site_release_total), y = water/on_site_release_total, color = industry_sector_category)) +
@@ -517,7 +543,7 @@ tri_data %>%
 
 ### Amount of water release by Industry Sector Category
 
-```{r industry-sector-category-water-release}
+```{r industry-sector-category-water-release, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
   ggplot(aes(y = industry_sector_category, x = water, fill = industry_sector_category)) +
   geom_col(fill = "#1F948C")
@@ -525,7 +551,7 @@ tri_data %>%
 
 # Detailed Analysis
 
-```{r create-analysis-data-frame}
+```{r create-analysis-data-frame, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data <- tri_data %>% 
   filter(chemical %in% c("Arsenic", "Styrene", "Formaldehyde", "Nickel", "Chromium", "Lead", "Mercury", "Ammonia", "Phosphorus (yellow or white)", "Chloroform", "Benzo[g,h,i]perylene")) 
 
@@ -538,7 +564,7 @@ chemical_analysis_data <- chemical_analysis_data %>%
 
 ## Chemicals and Location
 
-```{r count-chemical-and-type}
+```{r count-chemical-and-type, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   count(chemical) %>% 
   arrange(desc(n))
@@ -550,7 +576,7 @@ chemical_analysis_data %>%
   arrange(desc(n))
 ```
 
-```{r chemical-use-by-facility, echo = FALSE, message = FALSE}
+```{r chemical-use-by-facility, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   select(standard_parent_co_name, parent_co_name, facility_name, chemical) %>% 
   group_by(standard_parent_co_name, parent_co_name, facility_name) %>% 
@@ -558,22 +584,7 @@ chemical_analysis_data %>%
   arrange(desc(number_of_chemicals))
 ```
 
-```{r chem-analysis-facility-map, echo = FALSE, message = FALSE}
-# chemical_analysis_data %>% 
-#   label <- sprintf(facility_name, "<br>", parent_co_name, "<br>", industry_sector, "<br>", chemical, "<br>", city, ", ", state)
-# 
-# chemical_analysis_data %>% 
-#   select(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, chemical) %>% 
-#   distinct(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state, .keep_all = TRUE) %>% 
-#   leaflet() %>% 
-#   addTiles() %>% 
-#     addCircleMarkers(lng = ~longitude, 
-#                  lat = ~latitude, 
-#                  clusterOptions = markerClusterOptions(),
-#                  label = label)
-```
-
-```{r chemical-use-on-tribal-lands}
+```{r chemical-use-on-tribal-lands, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   group_by(tribal_yes_no, chemical) %>% 
   summarise(n = n()) %>% 
@@ -593,17 +604,19 @@ chemical_analysis_data %>%
   scale_fill_viridis_d()
 ```
 
-```{r}
-# chemical_analysis_data %>% 
-#   select(state, chemical) %>% 
-#   group_by(state) %>% 
-#   summarise(chemical_use = n_distinct(chemical)) %>% 
-#   arrange(desc(number_of_chemicals))
+```{r chemical-use-by-state,echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>%
+  select(state, chemical) %>%
+  group_by(state) %>%
+  summarise(chemical_use = n_distinct(chemical)) %>%
+  arrange(desc(chemical_use))
 ```
 
 ### Overview graphs
 
-```{r chemical-category-graphs}
+## Chemical Release Graphs
+
+```{r chemical-category-graphs, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(y = fct_infreq(chemical), fill = pbt)) +
   geom_bar() +
@@ -627,7 +640,9 @@ chemical_analysis_data %>%
 
 ### Graphs of on-site disposal by type
 
-```{r plot-fugitive-air-release-by-chemical}
+### Graphs of on-site release by type
+
+```{r plot-fugitive-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = fugitive_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -636,7 +651,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-stack-air-release-by-chemical}
+```{r plot-stack-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -645,7 +660,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-water-release-by-chemical}
+```{r plot-water-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = water)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -654,7 +669,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-underground-class-1-release-by-chemical}
+```{r plot-underground-class-1-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -663,7 +678,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-underground-2-to-5-release-by-chemical}
+```{r plot-underground-2-to-5-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -672,7 +687,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-land-treatment-by-chemical}
+```{r plot-land-treatment-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -681,7 +696,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-other-disposal-by-chemical}
+```{r plot-other-disposal-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -690,16 +705,36 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-on-site-release-total-by-chemical}
+```{r plot-on-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
-  ggplot(aes(y = chemical, x = on_site_release_total, fill = chemical)) +
+  ggplot(aes(x = on_site_release_total, y = chemical, fill = chemical)) +
   geom_col() +
   scale_fill_viridis_d()
 ```
 
+### Graphs of on-site disposal by type
+
+```{r plot-on-site-contained-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_total, y = on_site_contained)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-on-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = on_site_total, y = on_site_other)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
 ### Graphs of off-site disposal by type
 
-```{r plot-public-treatment-transfer-by-chemical}
+```{r plot-public-treatment-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = public_treatment_total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -708,7 +743,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-release-total-by-chemical}
+```{r plot-off-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_release_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -717,7 +752,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-recycled-total-by-chemical}
+```{r plot-off-site-recycled-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_recycled_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -726,7 +761,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r off-site-energy-recovery-total-by-chemical}
+```{r off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -735,7 +770,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r off-site-treated-total-by-chemical}
+```{r off-site-treated-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -744,7 +779,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-total-transfer-by-chemical}
+```{r plot-total-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -753,7 +788,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-total-releases-by-chemical}
+```{r plot-total-releases-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_releases)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -762,7 +797,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r off-site-energy-recovery-total-by-chemical}
+```{r off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -771,7 +806,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r off-site-treated-total-by-chemical}
+```{r off-site-treated-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -780,7 +815,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-total-transfer-by-chemical}
+```{r plot-total-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -789,7 +824,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-total-releases-by-chemical}
+```{r plot-total-releases-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_releases)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -797,6 +832,222 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ chemical)
 ```
+
+```{r plot-off-site-contain-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_contain)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+```{r plot-off-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_analysis_data %>% 
+  ggplot(aes(x = off_site_total, y = off_site_other)) +
+  geom_point(aes(alpha = 0.3, color = chemical)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ chemical)
+```
+
+
+### Chemical Release Trends by Year
+
+```{r on-site-total-by-year}
+chemical_analysis_data %>% 
+  ggplot(aes(x = chemical, y = on_site_total, fill = chemical)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ year)
+```
+
+```{r off-site-total-by-year}
+chemical_analysis_data %>% 
+  ggplot(aes(x = chemical, y = off_site_total, fill = chemical)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ year)
+```
+
+```{r arsenic-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Arsenic") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Arsenic") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r styrene-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Styrene") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Styrene") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r formaldehyde-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Formaldehyde") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Formaldehyde") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r nickel-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Nickel") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Nickel") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r chromium-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Chromium") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Chromium") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r lead-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Lead") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Lead") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r mercury-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Mercury") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Mercury") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r ammonia-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Ammonia") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Ammonia") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r phosphorus-release-by-year}
+# chemical_analysis_data %>% 
+#   filter(chemical == "Phosphorus") %>% 
+#   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+#   geom_col(position = "dodge", just = 0.5) +
+#   scale_fill_viridis_d() +
+#   facet_wrap(~ industry_sector_category)
+
+# chemical_analysis_data %>% 
+#   filter(chemical == "Phosphorus") %>% 
+#   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+#   geom_col(position = "dodge", just = 0.5) +
+#   scale_fill_viridis_d() +
+#   facet_wrap(~ industry_sector_category)
+```
+
+```{r chloroform-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Chloroform") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Chloroform") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
+```{r benzo[g,h,i]perylene-release-by-year}
+chemical_analysis_data %>% 
+  filter(chemical == "Benzo[g,h,i]perylene") %>% 
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Benzo[g,h,i]perylene") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+```
+
 
 # Conclusion
 
