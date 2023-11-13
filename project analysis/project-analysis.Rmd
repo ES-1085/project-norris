@@ -10,6 +10,10 @@ output: html_document
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(sf)
 library(htmltools)
+```
+
+
+```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
 library(leafsync)
 library(kableExtra)
 library(tidyverse)
@@ -1117,23 +1121,42 @@ chemical_analysis_data %>%
 chemical_analysis_data %>% 
   ggplot(aes(x = chemical, y = off_site_total, fill = chemical)) +
   geom_col(position = "dodge") +
+    labs(title = "Total Off Site By Chemical",
+       subtitle = "Off Site Release, Storage, Treatment, and Disposal",
+       x = "Chemical",
+       y = "Off Site Total",
+       fill = "Chemical") +
+  theme_minimal() +
   coord_flip() +
   scale_fill_viridis_d() +
   facet_wrap(~ year)
 ```
 
+Code wouldn't run on Joanna's computer, try on Cedar's?
 ```{r arsenic-release-by-year}
-chemical_analysis_data %>% 
-  filter(chemical == "Arsenic") %>% 
+chemical_analysis_data %>%
+  filter(chemical == "Arsenic") %>%
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Arsenic Off Site Total",
+       subtitle = "Arsenic Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
-chemical_analysis_data %>% 
-  filter(chemical == "Arsenic") %>% 
+chemical_analysis_data %>%
+  filter(chemical == "Arsenic") %>%
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Arsenic On Site Total",
+       subtitle = "Arsenic On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1143,6 +1166,12 @@ chemical_analysis_data %>%
   filter(chemical == "Styrene") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Styrene Off Site Total",
+       subtitle = "Styrene Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1150,6 +1179,12 @@ chemical_analysis_data %>%
   filter(chemical == "Styrene") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Styrene On Site Total",
+       subtitle = "Styrene On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1159,6 +1194,12 @@ chemical_analysis_data %>%
   filter(chemical == "Formaldehyde") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Formaldehyde Off Site Total",
+       subtitle = "Formaldehyde Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1166,6 +1207,12 @@ chemical_analysis_data %>%
   filter(chemical == "Formaldehyde") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Formaldehyde On Site Total",
+       subtitle = "Formaldhyde On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1175,6 +1222,12 @@ chemical_analysis_data %>%
   filter(chemical == "Nickel") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Nickel Off Site Total",
+       subtitle = "Nickel Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1182,6 +1235,12 @@ chemical_analysis_data %>%
   filter(chemical == "Nickel") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Nickel On Site Total",
+       subtitle = "Nickel On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +  
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1191,6 +1250,12 @@ chemical_analysis_data %>%
   filter(chemical == "Chromium") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Chromium Off Site Total",
+       subtitle = "Chromium Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1198,6 +1263,12 @@ chemical_analysis_data %>%
   filter(chemical == "Chromium") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Nickel On Site Total",
+       subtitle = "Nickel On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1207,6 +1278,12 @@ chemical_analysis_data %>%
   filter(chemical == "Lead") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Lead Off Site Total",
+       subtitle = "Lead Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1214,6 +1291,12 @@ chemical_analysis_data %>%
   filter(chemical == "Lead") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Lead On Site Total",
+       subtitle = "Lead On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1223,6 +1306,12 @@ chemical_analysis_data %>%
   filter(chemical == "Mercury") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Mercury Off Site Total",
+       subtitle = "Mercury Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1230,6 +1319,12 @@ chemical_analysis_data %>%
   filter(chemical == "Mercury") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Mercury On Site Total",
+       subtitle = "Mercury On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1239,6 +1334,12 @@ chemical_analysis_data %>%
   filter(chemical == "Ammonia") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Ammonia Off Site Total",
+       subtitle = "Ammonia Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1246,22 +1347,40 @@ chemical_analysis_data %>%
   filter(chemical == "Ammonia") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Ammonia On Site Total",
+       subtitle = "Ammonia On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
 
 ```{r phosphorus-release-by-year}
-# chemical_analysis_data %>% 
-#   filter(chemical == "Phosphorus") %>% 
+# chemical_analysis_data %>%
+#   filter(chemical == "Phosphorus") %>%
 #   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
 #   geom_col(position = "dodge", just = 0.5) +
+#   labs(title = "Phosphorus Off Site Total",
+#      subtitle = "Phosphorus Off Site Release, Storage, Treatment, and Disposal",
+#      x = "Year",
+#      y = "Off Site Total",
+#      fill = "Industry Sector Category") +
+#   theme_minimal() +
 #   scale_fill_viridis_d() +
 #   facet_wrap(~ industry_sector_category)
 
-# chemical_analysis_data %>% 
-#   filter(chemical == "Phosphorus") %>% 
+# chemical_analysis_data %>%
+#   filter(chemical == "Phosphorus") %>%
 #   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
 #   geom_col(position = "dodge", just = 0.5) +
+# labs(title = "Phosphorus On Site Total",
+#      subtitle = "Phosphorus On Site Release, Storage, and Disposal",
+#      x = "Year",
+#      y = "On Site Total",
+#      fill = "Industry Sector Category") +
+#   theme_minimal() +
 #   scale_fill_viridis_d() +
 #   facet_wrap(~ industry_sector_category)
 ```
@@ -1271,6 +1390,12 @@ chemical_analysis_data %>%
   filter(chemical == "Chloroform") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Chloroform Off Site Total",
+       subtitle = "Chloroform Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1278,6 +1403,12 @@ chemical_analysis_data %>%
   filter(chemical == "Chloroform") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Chloroform On Site Total",
+       subtitle = "Chloroform On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1287,6 +1418,12 @@ chemical_analysis_data %>%
   filter(chemical == "Benzo[g,h,i]perylene") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Benzo[g,h,i]perylene Off Site Total",
+       subtitle = "Benzo[g,h,i]perylene Off Site Release, Storage, Treatment, and Disposal",
+       x = "Year",
+       y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 
@@ -1294,6 +1431,12 @@ chemical_analysis_data %>%
   filter(chemical == "Benzo[g,h,i]perylene") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Benzo[g,h,i]perylene On Site Total",
+       subtitle = "Benzo[g,h,i]perylene On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
