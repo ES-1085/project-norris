@@ -96,6 +96,8 @@ tri_data %>%
 
 ### Percent of Facilities on Tribal Land
 
+The percentage of facilities on tribal land is less than 1%, but this does not make it negligible as the impact still matters.
+
 ```{r percent-tribal-land, echo = FALSE, message = FALSE, warning = FALSE}
 facility_location %>% 
   select(tribal_yes_no) %>% 
@@ -103,13 +105,13 @@ facility_location %>%
   summarise(percent = 100 * n()/nrow(facility_location))
 ```
 
-Using these visualizations, we have set up a groundwork map for chemical usage, which leads us to ask: knowing the drastic difference in percent of facilities on tribal land or not, does the location of tribal land have any effect on the type and amount of chemical release when compared to facilities not on tribal land?
+Using these tables, we have set up a groundwork map for chemical usage, which leads us to ask: knowing the drastic difference in percent of facilities on tribal land or not, does the location of tribal land have any effect on the type and amount of chemical release when compared to facilities not on tribal land?
 
-We can take points from history and U.S. law, knowing that tribes of the American West often do have significant health hazards due to the many power plants, factories, mines, waste dumps, and testing sites that are placed on their land -- sometimes with permission as a means of much-needed funds, and sometimes mandated.
+We can take points from history and U.S. law, knowing that tribes of the American West often do have significant health hazards due to the many power plants, factories, mines, waste dumps, and testing sites that are placed on their land -- sometimes with permission as a means to acquiring much-needed funds, and sometimes out of a tribe's power.
 
 ## Industry Analysis
 
-Within these questions of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 30 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence brings up the question: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
+Within these questions of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 11 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence brings up the question: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
 
 ```{r industry-sector-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 industry_info <- tri_data %>% 
@@ -132,6 +134,8 @@ tri_data <- tri_data %>%
 ```
 
 ### Industry Sector Distribution
+
+The most common purpose of a U.S. facility is chemical production, and the least common is apparel production which makes sense given trends in American imports -- though all clearly produce chemicals as waste as well.
 
 ```{r industry-sector-distribution, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -157,6 +161,8 @@ tri_data %>%
 ```
 
 ### Carcinogen Percentage by Industry Sector (Graph)
+
+Fitting with the most common industry sector, the chemical-producing facilities also use the most carcinogens (non-comprehensive), but the frequency seems to [almost] consistently grow with the prevalence of these sectors.
 
 ```{r industry-sector-and-carcinogen-use, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
