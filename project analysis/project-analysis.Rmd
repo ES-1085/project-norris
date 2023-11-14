@@ -286,6 +286,58 @@ chemical_info %>%
   facet_wrap(~year) 
 
 chemical_info %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = carcinogen, fill = carcinogen)) +
+  geom_bar() +
+  labs(title = "Carcinogen Prevalence by Year",
+       x = "Carcinogenic",
+       y = "Count",
+       fill = "Carcinogenic") +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
+  facet_wrap(~year) 
+```
+
+```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE}
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = pbt, fill = pbt)) +
+  geom_bar() +
+  labs(title = "PBT Prevalence by Year",
+       x = "PBT",
+       y = "Count",
+       fill = "PBT") +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
+  facet_wrap(~year) 
+```
+
+```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE, warning = FALSE}
+tri_data %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = pfas, fill = pfas)) +
+  geom_bar() +
+  labs(title = "PFAS Prevalence by Year",
+       x = "PFAS",
+       y = "Count",
+       fill = "PFAS") +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
+  facet_wrap(~year) 
+```
+
+For above visualizations: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
+
+##### Metal Category Pie Chart
+
+```{r metal-category-pie-chart, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_info %>% 
   group_by(metal_category) %>% 
   summarise(prop = n()/nrow(tri_data)) %>% 
   ggplot(aes(x = "", y = prop, fill = fct_inorder(metal_category))) +
@@ -531,7 +583,7 @@ pollution_info %>%
 
 ### Pollution by General Category (Including On-site-total)
 
-Pollution variable `Releases` is all zero.
+Pollution variable `Releases` is all zeros.
 
 ```{r pollution-by-general-category, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
@@ -719,13 +771,13 @@ chemical_analysis_data %>%
 
 ```{r chemical-use-on-tribal-lands, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
-  group_by(tribal_yes_no, chemical) %>% 
+  group_by(tribal_land, chemical) %>% 
   summarise(n = n()) %>% 
   mutate(prop = n/sum(n)) %>% 
-  ggplot(aes(x = chemical, y = prop, fill = tribal_yes_no)) +
+  ggplot(aes(x = chemical, y = prop, fill = tribal_land)) +
   geom_col(position = "fill") +
   labs(title = "Chemical Use On and Off Tribal Lands",
-       subtitle = "by chemical",
+       subtitle = "By Chemical",
        x = "Chemical",
        y = "Proportion") +
   theme_minimal() +
@@ -733,14 +785,14 @@ chemical_analysis_data %>%
   scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
-  select(chemical, tribal_yes_no) %>% 
-  count(chemical, tribal_yes_no)
+  select(chemical, tribal_land) %>% 
+  count(chemical, tribal_land)
 
 chemical_analysis_data %>% 
-  ggplot(aes(y = tribal_yes_no, fill = chemical)) +
+  ggplot(aes(y = tribal_land, fill = chemical)) +
   geom_bar(position = "fill", color = "white") +
   labs(title = "Chemical Use On and Off Tribal Lands",
-       subtitle = "by tribal and not tribal land",
+       subtitle = "By Tribal and Not Tribal Land",
        y = "Tribal Land?") +
   theme_minimal() +
   scale_fill_viridis_d()
@@ -1121,7 +1173,6 @@ chemical_analysis_data %>%
   facet_wrap(~ year)
 ```
 
-Code wouldn't run on Joanna's computer, try on Cedar's?
 ```{r arsenic-release-by-year}
 chemical_analysis_data %>%
   filter(chemical == "Arsenic") %>%
