@@ -366,6 +366,7 @@ tri_data %>%
   scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
+
 For above visualizations: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
 
 ##### Metal Category Pie Chart
@@ -396,6 +397,7 @@ tri_data %>%
   filter(carcinogen == "YES") %>% 
   group_by(chemical)
 ```
+
 There are `sum(tri_data$carcinogen == "NO")` non-carcinogens being observed.
 
 ```{r carcinogen-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
@@ -404,6 +406,7 @@ tri_data %>%
   filter(carcinogen == "NO") %>% 
   group_by(chemical)
 ```
+
 There are `sum(tri_data$pfas == "YES")` observations of PFAS chemicals in the dataset.
 
 ```{r pfas-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
@@ -412,6 +415,7 @@ tri_data %>%
   filter(pfas == "YES") %>% 
   group_by(chemical)
 ```
+
 There are `sum(tri_data$pfas == "NO")` observations of non-PFAS chemicals in the dataset.
 
 ```{r pfas-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
@@ -420,6 +424,7 @@ tri_data %>%
   filter(pfas == "NO") %>% 
   group_by(chemical)
 ```
+
 There are `sum(tri_data$pbt == "YES")` observations of PBT chemicals in the dataset.
 
 ```{r pbt-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
@@ -428,6 +433,7 @@ tri_data %>%
   filter(pbt == "YES") %>% 
   group_by(chemical)
 ```
+
 There are `sum(tri_data$pbt == "NO")` observations of non-PBT chemicals in the dataset.
 
 ```{r pbt-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
@@ -731,10 +737,10 @@ chemical_analysis_data %>%
 
 ```{r chemical-use-on-tribal-lands, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
-  group_by(tribal_yes_no, chemical) %>% 
+  group_by(tribal_land, chemical) %>% 
   summarise(n = n()) %>% 
   mutate(prop = n/sum(n)) %>% 
-  ggplot(aes(x = chemical, y = prop, fill = tribal_yes_no)) +
+  ggplot(aes(x = chemical, y = prop, fill = tribal_land)) +
   geom_col(position = "fill") +
   labs(title = "Chemical Use On and Off Tribal Lands",
        subtitle = "by chemical",
@@ -745,11 +751,11 @@ chemical_analysis_data %>%
   scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
-  select(chemical, tribal_yes_no) %>% 
-  count(chemical, tribal_yes_no)
+  select(chemical, tribal_land) %>% 
+  count(chemical, tribal_land)
 
 chemical_analysis_data %>% 
-  ggplot(aes(y = tribal_yes_no, fill = chemical)) +
+  ggplot(aes(y = tribal_land, fill = chemical)) +
   geom_bar(position = "fill", color = "white") +
   labs(title = "Chemical Use On and Off Tribal Lands",
        subtitle = "by tribal and not tribal land",
@@ -1146,7 +1152,6 @@ chemical_analysis_data %>%
   facet_wrap(~ year)
 ```
 
-Code wouldn't run on Joanna's computer, try on Cedar's?
 ```{r arsenic-release-by-year}
 chemical_analysis_data %>%
   filter(chemical == "Arsenic") %>%
