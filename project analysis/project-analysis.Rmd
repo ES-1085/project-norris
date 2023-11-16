@@ -61,6 +61,7 @@ facility_location <- facility_location %>%
 tri_data <- tri_data %>% 
   mutate(tribal_yes_no = case_when(is.na(tribal_land) == FALSE ~ "Tribal Land",
                                    TRUE ~ "Not Tribal Land"))
+
 ```
 
 ### Number of Facilities Owned by Each Company
@@ -73,6 +74,7 @@ tri_data %>%
   group_by(standard_parent_co_name, parent_co_name) %>% 
   summarise(number_of_facilities = n_distinct(facility_name)) %>% 
   arrange(desc(number_of_facilities))
+
 ```
 
 ### Map of Facilities
@@ -263,6 +265,21 @@ chemical_info %>%
   scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
+```{r chemical-percent-carcinogen, echo = FALSE, message = FALSE, warning = FALSE}
+chemical_info %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = carcinogen, fill = carcinogen)) +
+  geom_bar() +
+  labs(title = "Carcinogen Prevalence by Year",
+       x = "Carcinogenic",
+       y = "Count",
+       fill = "Carcinogenic") +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
+  facet_wrap(~year) 
+```
 
 ```{r chemical-percent-metal-category, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
@@ -285,19 +302,6 @@ chemical_info %>%
   scale_fill_viridis_d() +
   facet_wrap(~year) 
 
-chemical_info %>% 
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = carcinogen, fill = carcinogen)) +
-  geom_bar() +
-  labs(title = "Carcinogen Prevalence by Year",
-       x = "Carcinogenic",
-       y = "Count",
-       fill = "Carcinogenic") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year) 
 ```
 
 ```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE}
@@ -574,7 +578,7 @@ pollution_info %>%
 ```{r on-site-release-total-by-year, echo = FALSE, message = FALSE, warning = FALSE}
 pollution_info %>% 
   ggplot(aes(x = year, y = on_site_release_total)) + 
-  geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
+  stat_smooth(geom = "smooth", fill = "#00A790", color = "#00608E", linewidth = 0.6, span = 0.2, n = 4) +
   labs(title = "On Site Release Total from 2011 to 2021",
        x = "Year",
        y = "On Site Release Total") +
@@ -620,7 +624,7 @@ pollution_info %>%
   ggplot(aes(x = year, y = off_site_recycled_total)) + 
   geom_smooth(fill = "#00A790", color = "#00608E", linewidth = 0.6) +
   labs(title = "Total Recycled Off Site by Year",
-       x = "year",
+       x = "Year",
        y = "Total Recycled Off Site") +
   theme_minimal()
 ```
@@ -771,29 +775,32 @@ chemical_analysis_data %>%
 
 ```{r chemical-use-on-tribal-lands, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data %>% 
-  group_by(tribal_land, chemical) %>% 
+  group_by(tribal_yes_no, chemical) %>% 
   summarise(n = n()) %>% 
   mutate(prop = n/sum(n)) %>% 
-  ggplot(aes(x = chemical, y = prop, fill = tribal_land)) +
+  ggplot(aes(x = chemical, y = prop, fill = tribal_yes_no)) +
   geom_col(position = "fill") +
   labs(title = "Chemical Use On and Off Tribal Lands",
        subtitle = "By Chemical",
        x = "Chemical",
-       y = "Proportion") +
+       y = "Proportion",
+       fill = "Chemical") +
   theme_minimal() +
   coord_flip() +
   scale_fill_viridis_d(begin = 0.4, end = 1)
 
 chemical_analysis_data %>% 
-  select(chemical, tribal_land) %>% 
-  count(chemical, tribal_land)
+  select(chemical, tribal_yes_no) %>% 
+  count(chemical, tribal_yes_no)
 
 chemical_analysis_data %>% 
-  ggplot(aes(y = tribal_land, fill = chemical)) +
+  ggplot(aes(y = tribal_yes_no, fill = chemical)) +
   geom_bar(position = "fill", color = "white") +
   labs(title = "Chemical Use On and Off Tribal Lands",
        subtitle = "By Tribal and Not Tribal Land",
-       y = "Tribal Land?") +
+       y = "Tribal Land?",
+       x = "",
+       fill = "Tribal Land?") +
   theme_minimal() +
   scale_fill_viridis_d()
 ```
@@ -1303,8 +1310,8 @@ chemical_analysis_data %>%
   filter(chemical == "Chromium") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Nickel On Site Total",
-       subtitle = "Nickel On Site Release, Storage, and Disposal",
+  labs(title = "Chromium On Site Total",
+       subtitle = "Chromium On Site Release, Storage, and Disposal",
        x = "Year",
        y = "On Site Total",
        fill = "Industry Sector Category") +
