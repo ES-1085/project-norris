@@ -81,7 +81,7 @@ tri_data %>%
 
 The large majority of facilities in this dataset are located in North America, but a significant number of U.S.-owned facilities are strewn across the global map in other territories -- possibly shifting any inferences that can be made on the state of pollution solely in the U.S.
 
-```{r facility-map, echo = FALSE, message = FALSE, warning = FALSE}
+```{r facility-map, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "An interactive map displaying distinct U.S.-owned facility locations. Each point represents a facility and includes information such as facility name, parent company, industry sector, city, and state. 31,594 points are located in North America, and 127 are in other territories."}
 tri_data %>% 
   distinct(longitude, latitude, facility_name, parent_co_name, industry_sector, city, state) %>% 
   leaflet() %>% 
@@ -146,7 +146,9 @@ tri_data %>%
  group_by(industry_sector_category) %>%
  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
  arrange(desc(percent))
+```
 
+```{r industry-sector-category-distribution, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A bar plot visualizes the distribution of industry sector categories in the Toxic Release Inventory (TRI). The plot displays the count of different industry sectors, with each bar representing a specific category. Chemical waste is the most prevalent sector, and textiles the least."}
 tri_data %>% 
   ggplot(aes(y = fct_infreq(industry_sector_category), fill = industry_sector_category)) +
   geom_bar() +
@@ -161,12 +163,12 @@ tri_data %>%
 
 ### Carcinogen Percentage by Industry Sector Graph
 
-Understandably fitting with the most common industry sector, the chemical-producing facilities also use the most carcinogens (non-comprehensive), but the frequency seems to [almost] consistently grow with the prevalence of these sectors. That being said, every sector listed has a chemical usage that is majority non-carcinogenic.
+Understandably fitting with the most common industry sector, the chemical-producing facilities (and processed materials) also use the most carcinogens (non-comprehensive), but the frequency seems to almost consistently grow with the prevalence of these sectors besides the food industry. That being said, every sector listed has a chemical usage that is majority non-carcinogenic.
 
-```{r industry-sector-and-carcinogen-use, echo = FALSE, message = FALSE, warning = FALSE}
+```{r industry-sector-and-carcinogen-use, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A bar plot illustrates the distribution of carcinogen use across various industry sectors. Each bar represents an industry sector's prevalence, differentiated by the presence or absence of carcinogens, denoted by different fill colors. Every category uses mostly non-carcinogens, with the highest amount of carcinogens used in chemical and processing industries."}
 tri_data %>% 
-  ggplot(aes(y = fct_infreq(industry_sector), fill = carcinogen)) +
-  geom_bar() +
+  ggplot(aes(y = fct_infreq(industry_sector_category), fill = carcinogen)) +
+  geom_bar(position = "fill") +
   labs(title = "Carcinogen Use by Industry Sector",
        x = "Count",
        y = "Industry Sector",
@@ -206,8 +208,29 @@ chemical_info %>%
   group_by(elemental_metal_included) %>%
   summarise(percent = 100 * n()/nrow(tri_data)) %>% 
   arrange(desc(percent))
+```
 
-chemical_info %>% 
+```{r chemical-percent-pbt, echo = FALSE, message = FALSE, warning = FALSE}
+tri_data %>% 
+  select(pbt) %>% 
+  group_by(pbt) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+```
+
+```{r chemical-percent-pfas, echo = FALSE, message = FALSE, warning = FALSE}
+tri_data %>% 
+  select(pfas) %>% 
+  group_by(pfas) %>%
+  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
+  arrange(desc(percent))
+```
+
+#### Chemical Categories Graphs
+
+```{r chemical-trends-by-category-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of elemental metals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of elemental metals with distinct colors indicating whether the chemicals used are or are not elemental metals. The large majority are not elemental metals, but the amount of elemental metals counted has been increasing slightly by year."}
+
+tri_data %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>%
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
@@ -222,7 +245,8 @@ chemical_info %>%
   facet_wrap(~year) 
 ```
 
-```{r chemical-percent-clean-air-act, echo = FALSE, message = FALSE, warning = FALSE}
+```{r chemical-percent-clean-air-act, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of Clean Air Act chemicals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of chemicals with distinct colors indicating whether they are or are not identified in the Clean Air Act. The large majority are in the act, but the amount of non-act chemicals counted has been increasing slightly by year."}
+ 
 chemical_info %>% 
   select(clean_air_act_chemical) %>% 
   group_by(clean_air_act_chemical) %>%
@@ -244,14 +268,15 @@ chemical_info %>%
   facet_wrap(~year)
 ```
 
-```{r chemical-percent-metal, echo = FALSE, message = FALSE, warning = FALSE}
+```{r chemical-percent-metal, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of metals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of metals with distinct colors indicating whether the chemicals used are or are not metals. Most of them are not metals, and the amount of metals and non-metals counted has been increasing by year."}
+ 
 chemical_info %>% 
   select(metal) %>% 
   group_by(metal) %>%
   summarise(percent = 100 * n()/nrow(tri_data)) %>% 
   arrange(desc(percent))
 
-chemical_info %>% 
+tri_data %>%
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = metal, fill = metal)) +
@@ -281,14 +306,15 @@ chemical_info %>%
   facet_wrap(~year) 
 ```
 
-```{r chemical-percent-metal-category, echo = FALSE, message = FALSE, warning = FALSE}
+```{r chemical-percent-metal-category, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A faceted bar plot depicts the prevalence of metal categories used by U.S. facilities from 2011 to 2021, whether a non-metal, metal with qualifiers, metal compound, chemical possibly containing metal, indivudually-listed metal compound, or elemental metal. Each bar represents the count of these metal categories, sorted by year, with varied colors denoting distinct metal category types."}
+
 chemical_info %>% 
   select(metal_category) %>% 
   group_by(metal_category) %>%
   summarise(percent = 100 * n()/nrow(tri_data)) %>% 
   arrange(desc(percent))
 
-chemical_info %>% 
+tri_data %>%
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = metal_category, fill = metal_category)) +
@@ -301,11 +327,32 @@ chemical_info %>%
   coord_flip() +
   scale_fill_viridis_d() +
   facet_wrap(~year) 
-
 ```
 
-```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE}
-tri_data %>% 
+```{r chemical-trends-by-category-carcinogen, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of carcinogens used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of carcinogenic substances, sorted by year, with varied colors indicating different carcinogen categories. The majority of chemicals used are non-carcinogenic."}
+
+<<<<<<< HEAD
+=======
+chemical_info %>% 
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+  ggplot(aes(x = carcinogen, fill = carcinogen)) +
+  geom_bar() +
+  labs(title = "Carcinogen Prevalence by Year",
+       x = "Carcinogenic",
+       y = "Count",
+       fill = "Carcinogenic") +
+  scale_y_discrete(limits=c(0,10)) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_viridis_d(begin = 0.4, end = 1) +
+  facet_wrap(~year)
+>>>>>>> 031ec1b85f8858603ba7b5a29f96d7eddf0822a5
+```
+
+```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of PBTs used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of PBT substances, sorted by year, with different colors indicating whether a chemical is or is not a PBT. The large majority of chemicals used are non-PBTs, with the number of PBTs being relatively consistent by year."}
+
+chemical_info %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = pbt, fill = pbt)) +
@@ -320,8 +367,9 @@ tri_data %>%
   facet_wrap(~year) 
 ```
 
-```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE, warning = FALSE}
-tri_data %>% 
+```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of PFAS chemicals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of PFAS substances, sorted by year, with different colors indicating whether a chemical is or is not a PFAS. The overarching majority of chemicals used are not PFAS, and PFAS data only appears for the years 2020 and 2021."}
+
+chemical_info %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   ggplot(aes(x = pfas, fill = pfas)) +
@@ -340,8 +388,9 @@ For above visualizations: elemental metals (some harmless, some causing neurotox
 
 ##### Metal Category Pie Chart
 
-```{r metal-category-pie-chart, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
+```{r metal-category-pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.alt = "A circular pie chart demonstrates the distribution of metal categories used by U.S. facilities in the dataset. Each segment of the pie represents a metal category with distinct colors, with the size proportional to the percentage of occurances. Non-metals make up 54% of the chart, and elemental metals make up 19% of the chart."}
+
+tri_data %>% 
   group_by(metal_category) %>% 
   summarise(prop = n()/nrow(tri_data)) %>% 
   ggplot(aes(x = "", y = prop, fill = fct_inorder(metal_category))) +
@@ -357,6 +406,7 @@ chemical_info %>%
 ```
 
 ```{r chemical-percent-carcinogen, echo = FALSE, message = FALSE, warning = FALSE}
+
 chemical_info %>% 
   select(carcinogen) %>% 
   group_by(carcinogen) %>%
@@ -423,7 +473,6 @@ chemical_info %>%
 ```
 
 For above visualizations: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
-
 
 ### Chemical Categories
 
@@ -496,7 +545,7 @@ pollution_info <- tri_data %>%
 
 On-site release types: variables `Underground`, `Landfill`, and `Surface Impoundment` are all zero.
 
-```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between fugitive air releases and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a steep decline in fugitive air release with larger on-site release."}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = fugitive_air, color = fugitive_air, fill = fugitive_air)) + 
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -507,7 +556,7 @@ pollution_info %>%
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-stack-air, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-stack-air, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between stack air releases and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a steep decline in stack air release with larger on-site release."}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -518,7 +567,7 @@ pollution_info %>%
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-water, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-water, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between water releases and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a steep decline in water release with larger on-site release."}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = water)) +
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -529,7 +578,7 @@ pollution_info %>%
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-underground-class-1, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-underground-class-1, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between underground (Class 1) releases and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a steep decline in underground (Class 1) release with larger on-site release."}
  pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -540,7 +589,7 @@ pollution_info %>%
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-underground-class-2-to-5, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-underground-class-2-to-5, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between underground (Class 2-5) releases and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a consistently straight line of underground (Class 2-5) release even with larger on-site release."}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -551,7 +600,7 @@ pollution_info %>%
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-land-treatment, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-land-treatment, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between land treatment and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a small decline in land treatment with larger on-site release."}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -562,7 +611,7 @@ pollution_info %>%
   facet_wrap(~ year)
 ```
 
-```{r pollution-by-on-site-release-other-disposal, echo = FALSE, message = FALSE, warning = FALSE}
+```{r pollution-by-on-site-release-other-disposal, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between other disposal and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and all years show a steep increase in other release with larger on-site release."}
 pollution_info %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
   geom_smooth(color = "#00608E", linewidth = 0.6) +
@@ -708,8 +757,6 @@ pollution_info %>%
   theme_minimal()
 ```
 
-
-
 ```{r pollution-water-log-graph, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>%
   filter(water > 0) %>%
@@ -854,8 +901,6 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d(begin = 0.4, end = 1)
 ```
-
-### Graphs of on-site disposal by type
 
 ### Graphs of on-site release by type
 
@@ -1193,19 +1238,6 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>%
-  filter(chemical == "Arsenic") %>%
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Arsenic On Site Total",
-       subtitle = "Arsenic On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r styrene-release-by-year}
@@ -1217,19 +1249,6 @@ chemical_analysis_data %>%
        subtitle = "Styrene Off Site Release, Storage, Treatment, and Disposal",
        x = "Year",
        y = "Off Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Styrene") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Styrene On Site Total",
-       subtitle = "Styrene On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
        fill = "Industry Sector Category") +
   theme_minimal() +
   scale_fill_viridis_d() +
@@ -1249,19 +1268,6 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Formaldehyde") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Formaldehyde On Site Total",
-       subtitle = "Formaldhyde On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r nickel-release-by-year}
@@ -1275,19 +1281,6 @@ chemical_analysis_data %>%
        y = "Off Site Total",
        fill = "Industry Sector Category") +
   theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Nickel") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Nickel On Site Total",
-       subtitle = "Nickel On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +  
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
@@ -1305,6 +1298,7 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+<<<<<<< HEAD
 
 chemical_analysis_data %>% 
   filter(chemical == "Chromium") %>% 
@@ -1318,6 +1312,8 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+=======
+>>>>>>> 031ec1b85f8858603ba7b5a29f96d7eddf0822a5
 ```
 
 ```{r lead-release-by-year}
@@ -1333,37 +1329,11 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Lead") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Lead On Site Total",
-       subtitle = "Lead On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r mercury-release-by-year}
-chemical_analysis_data %>% 
-  filter(chemical == "Mercury") %>% 
-  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Mercury Off Site Total",
-       subtitle = "Mercury Off Site Release, Storage, Treatment, and Disposal",
-       x = "Year",
-       y = "Off Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Mercury") %>% 
+chemical_analysis_data %>%
+  filter(chemical == "Mercury") %>%
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
   labs(title = "Mercury On Site Total",
@@ -1389,19 +1359,6 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Ammonia") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Ammonia On Site Total",
-       subtitle = "Ammonia On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r phosphorus-release-by-year}
@@ -1414,18 +1371,6 @@ chemical_analysis_data %>%
        x = "Year",
        y = "Off Site Total",
   fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d()
-
-chemical_analysis_data %>%
-  filter(chemical == "Phosphorus") %>%
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Phosphorus On Site Total",
-      subtitle = "Phosphorus On Site Release, Storage, and Disposal",
-      x = "Year",
-      y = "On Site Total",
-      fill = "Industry Sector Category") +
   theme_minimal() +
   scale_fill_viridis_d()
 ```
@@ -1443,19 +1388,6 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Chloroform") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Chloroform On Site Total",
-       subtitle = "Chloroform On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r benzo[g,h,i]perylene-release-by-year}
@@ -1467,19 +1399,6 @@ chemical_analysis_data %>%
        subtitle = "Benzo[g,h,i]perylene Off Site Release, Storage, Treatment, and Disposal",
        x = "Year",
        y = "Off Site Total",
-       fill = "Industry Sector Category") +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  facet_wrap(~ industry_sector_category)
-
-chemical_analysis_data %>% 
-  filter(chemical == "Benzo[g,h,i]perylene") %>% 
-  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
-  geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Benzo[g,h,i]perylene On Site Total",
-       subtitle = "Benzo[g,h,i]perylene On Site Release, Storage, and Disposal",
-       x = "Year",
-       y = "On Site Total",
        fill = "Industry Sector Category") +
   theme_minimal() +
   scale_fill_viridis_d() +
