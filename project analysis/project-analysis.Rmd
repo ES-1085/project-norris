@@ -33,6 +33,9 @@ library(lintr)
 
 ```{r data-read-in, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
+
+tri_data %>% 
+
 ```
 
 # Introduction
@@ -325,12 +328,9 @@ chemical_info %>%
   summarise(percent = 100 * n()/nrow(tri_data)) %>% 
   arrange(desc(percent))
 
-
-# can i add line breaks into the y-axis values
-
-tri_data %>%
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
+test <- tri_data %>%
+  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>%
+  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>%
   ggplot(aes(x = metal_category, fill = metal_category)) +
   geom_bar() +
   labs(title = "Metal Category Prevalence by Year",
@@ -340,7 +340,7 @@ tri_data %>%
   theme_minimal() +
   coord_flip() +
   scale_fill_viridis_d() +
-  facet_wrap(~year) 
+  facet_wrap(~year)
 ```
 
 ```{r chemical-trends-by-category-carcinogen, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of carcinogens used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of carcinogenic substances, sorted by year, with varied colors indicating different carcinogen categories. The majority of chemicals used are non-carcinogenic."}
