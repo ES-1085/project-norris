@@ -1,0 +1,68 @@
+#1 
+TITLE PAGE
+
+#2 
+Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade of 2011-2021 goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially-close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all.
+
+#3 
+As the name goes, many are toxic and build up in the body over time, and this poisoning leads to neurological, developmental, reproductive, and immune issues. This contamination also goes for the air, water, and soil — spreading poisonous effects to plants and wildlife.
+
+#4 
+Remember that TRI does not accurately tell us how many facilities are in the country, the extent of human health effects of chemicals, every source of pollution, nor how many chemicals a facility uses! The TRI reporting forms must be filled out by owners and operators of facilities that meet the following three criteria, but they are not required to if they don't meet all three:   The facility falls within a TRI-covered industry sector or is federally-owned or operated; The facility has 10 or more full-time employee equivalents; and The facility manufactures (including import) or processes more than 25,000 pounds or otherwise uses more than 10,000 pounds of a TRI-listed chemical during a calendar year. Note that a lower reporting threshold applies to some TRI chemicals: a threshold of 10 or 100 pounds applies to “chemicals of special concern” (e.g., persistent bioaccumulative toxic (PBT) chemicals); a threshold of 0.1 gram applies to the dioxin and dioxin-like compounds category; and a threshold of 100 pounds applies to Per- and Polyfuoroalkyl Substances (PFAS).
+
+#5 
+This map shows the distribution of facilities throughout the United States and Territories. The TRI includes data from Guam, the Northern Mariana Islands, Puerto Rico, Washington DC, the US Virgin Islands, and Saipan, though the vast majority of the facilities are in the continental US.
+
+#6 
+One of our primary questions was looking for trends in chemical use. We looked at chemical use by industry sector, use on tribal land, chemical categories, and then did a detailed analysis on the use, release, and disposal of 11 chemicals.
+
+#7 
+This pie chart shows the distribution of metal categories that chemicals can fall into. Heavy metals are some dangerous little 
+guys. As we can see, 54% of them are not metal, 21% are metal compounds, 19% are elemental metals. Chemicals that may contain metals, or metals with qualifiers and individually listed compounds that contain metal are tied at 1%.
+
+#8 
+Of the 11 chemicals we chose to closely analyze, 9 of them are Clean Air Act Chemicals and 2 of them aren't. This act was a federal air pollution law from 1963 that has been consistently amended to add regulations to chemical emissions that harm human health and the environment/ozone. This does not mean that the non-act chemicals are not harmful, but that they are differently managed/regulated than the act chemicals.
+
+#9 
+None of the 11 selected chemicals were PFAS chemicals. PFAS refers to Per- and Polyfuoroalkyl Substances. According to the EPA, PFAS have been in use since the 1940s and have been shown to have a variety of adverse effects on humans and the environment. PFAS are found in drinking water, food, packaging, personal care products, and water and soil near waste sites. Some effects on humans include decreased fertility, developmental effects and delays, increased risk of certain types of cancer, and reduced immune function.
+
+#10 
+Only 3 of our chemicals are persistent bioaccumulative toxics, or PBTS. Three common PBTs are Lead, Mercury, and Benzo[g,h,i]perylene. None of these chemicals are PFAS, though Lead has also been shown to be carcinogenic (as well as having other health effects such as immune damage, reproductive toxicity, and neurological issues. Mercury causes damage to the nervous system, liver, and kidneys (as well as other health effects) and benzo[g,h,i]perylene causes kidney and liver damage, as well as skin 
+inflammation.
+
+#11 
+And 6 of our 11 chemicals have been shown to be carcinogenic. The term “carcinogenic” refers to chemicals that are linked to the onset of different cancers. Only chemicals that are undoubtedly proven to have a strong link are in the YES category, so even chemicals that have a “likely-carcinogenic” status or “possibly-carcinogenic” are in the NO category, so it isn’t surely accurate.
+
+#12 
+Using the 11 that we chose from the very large dataset. These specific chemicals were chosen for a more equal distribution of common and non-common chemicals as well as carcinogens and non-carcinogens.
+
+#13 
+This graph looks at the proportion of chemicals used on and off tribal land, with the proportion on the x axis and chemical name on the y axis. Nickel, Mercury, Formaldehyde, Chromium, Chloroform, Benzo[g, h, i]perylene, and Arsenic are all used more frequently on tribal land than off. Phosphorus is the only chemical that is not used at all on tribal land, though that is likely because there is only one facility in the entire country whose primary purpose is the production of phosphorus (sadly currently being used as a military weapon).
+
+#14 
+This graph is similar, showing the use of chemicals on and off tribal land but this time the y axis is whether it is tribal land. This graph also shows that Nickel, Mercury, Formaldehyde, Chromium, Chloroform, Benzo[g, h, i]perylene, and Arsenic are more prevalent on Tribal land. Phosphorus, Arsenic, and Chloroform are all present on this graph, though some of them (especially phosphorus) are not used frequently enough to be easily visible.
+
+#15 
+We were incredibly curious about pollution trends, which proved to be much harder to visualize than we expected. However, we did find several broad trends, which we found to be fascinating.
+
+#16 
+This graph looks at the broad trends of the off-site release total by year. The off-site release total is the sum of recycled chemicals, energy recovery, chemical treatment, and chemical disposal all done off-site. Based on this visualization, the overall total of off-site releases has declined since 2011.
+
+#17 
+This graph shows the total on site releases by year. The on-site release total is the sum of chemical air emissions, surface water discharge, and land disposal all done on-site. Based on this graph, on site releases have also decreased steadily since 2011.
+
+#18 
+This graph visualizes the amount of chemicals contained off-site from 2011 to 2021. Off-site containment consists of chemicals transported for disposal through various injection wells and types of landfills. It does not actually account for anything that ended up being contained, and just as much of this release data accounts for, only tracks what leaves the facility with a certain intent. What actually happened to the chemicals could very well be different.Off site containment has dropped steadily from 2011 to 2021, with a steeper decrease than both on and off site releases.
+
+#19 
+However, the total energy recovered off site has drastically increased since 2011. Energy recovery can be the combustion of toxic chemicals in an industrial furnace for recovering its parts or it can be the transfer of chemicals to waste brokers for this purpose.
+
+#20 
+Overall, we found that pollution and releases decreased between 2011 and 2021. 7 of the 11 chemicals we chose are used more frequently on tribal land than off. Energy recovery has increased greatly since 2011. Additionally, we found that over 6000 of the facilities in our dataset had missing values for the parent company and standard parent company names. The second most common parent company was the US Department of Defense, which has had 324 facilities file reports with the TRI between 2011 and 2021.
+
+#21 
+PFAS data only started being monitored in 2020 so we only have 2 years of data to account for in this decade. It is a known subset of chemicals, but not one that contains the amount of accurate and consistent data that we would need. Not all industry sectors are listed in this dataset. There are over 30, but as with every variable there are requirements and limitations for what is accepted into the data frame. The information on tribal land is similarly limited. We mentioned that the facilities are not all shown because they have to meet chemical thresholds, but some also are not shown because of the type of facility they are if private or U.S. owned but outside of North America — the information there is very limited because it’s not easily or legally federally regulated.
+
+#22 
+With more time and data, we would love to analyze the timing of regulation and chemical controls and how that impacts pollution and releases, the prevalence of chemicals used in each state, the reporting threshold, and PFAS use before 2020. We would also have loved to go more in depth with the differences of facilities and chemical use on and off tribal land, specific health and environmental effects, and potentially analyzing all the data the TRI has collected.
+
