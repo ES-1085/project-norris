@@ -5,10 +5,6 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-~~ Jo: alt text ends at metal category pie chart
-~~ Cedar: figure out if document will knit
-~~ Cedar: remove duplicate code chunks/rename code chunks
-
 # Library and Data Read-In
 
 ```{r load-packages, echo = FALSE, message = FALSE, warning = FALSE}
@@ -41,7 +37,7 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 # Introduction
 
-The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data. 
+The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data.
 
 Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade of 2011-2021 goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially-close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
 
@@ -85,7 +81,19 @@ tri_data %>%
 
 ```
 
-~~ add code for number of facilities per state 
+```{r}
+tri_data %>% 
+  group_by(state) %>% 
+  count(state) %>% 
+  arrange(desc(n))
+
+tri_data %>% 
+  select(facility_name, state) %>% 
+  distinct(facility_name, state) %>% 
+  group_by(state) %>%
+  count(state) %>% 
+  arrange(desc(n))
+```
 
 ### Map of Facilities
 
@@ -124,7 +132,7 @@ We can take points from history and U.S. law, knowing that tribes of the America
 
 ## Industry Analysis
 
-Within these observations of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 11 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence allows us to ask: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'? 
+Within these observations of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 11 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence allows us to ask: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'?
 
 ```{r industry-sector-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 industry_info <- tri_data %>% 
@@ -199,8 +207,14 @@ chemical_info <- tri_data %>%
 ```
 
 
-~~ add table with number of chemicals tracked each year (maybe also graph)
-
+```{r}
+tri_data %>% 
+  select(chemical, year) %>% 
+  distinct(chemical, year) %>% 
+  group_by(year) %>%
+  count(year) %>% 
+  arrange(year)
+```
 
 The most commonly used chemical is lead, accounting for over 5% of use, followed by its compounds that make up almost 4% of use. Lead is known to cause poisoning of the human body, leading to neurological and reproductive health issues as well as impaired function of the kidneys and other body systems. Poisoning can be acquired through contaminated dust particles and products, contaminated drinking water, and contaminated soil.
 
@@ -214,7 +228,7 @@ chemical_info %>%
 
 ### Chemical Category Calculations
 
-~~ why are these separate from the corresponding graphs????
+\~\~ why are these separate from the corresponding graphs????
 
 The large majority of chemicals used are not elemental metals or metals in general. About 63% are identified in the Clean Air Act, leaving 37% not present. Over 28% of chemicals used in these facilities are known to be carcinogenic, 17% are PBTs, and 0.02% are PFAS'. These smaller percentages are still a concern, and are in-part new variables to track. PFAS did not have to be reported to the TRI until 2020 (making this decade of data insufficient), even though over 2,000 facilities were known to be producing them before the regulation. Therefore, it has far fewer observations in comparison to other chemicals though used since the 1940s and known to cause certain cancers, impairment of the immune system, reproductive issues, and abnormal developmental effects. The reporting threshold for that particular subset of chemicals is 100 pounds per year.
 
@@ -306,6 +320,7 @@ tri_data %>%
   scale_fill_viridis_d(begin = 0.4, end = 1) +
   facet_wrap(~year) 
 ```
+
 ```{r chemical-percent-carcinogen, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
   select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
@@ -407,9 +422,6 @@ For above visualizations: elemental metals (some harmless, some causing neurotox
 
 ```{r metal-category-pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.alt = "A circular pie chart demonstrates the distribution of metal categories used by U.S. facilities in the dataset. Each segment of the pie represents a metal category with distinct colors, with the size proportional to the percentage of occurances. Non-metals make up 54% of the chart, and elemental metals make up 19% of the chart."}
 
-# change labels on pie chart so they're external instead of internal (easier to read)
-  # also change them to percentages instead of decimals
-
 tri_data %>% 
   group_by(metal_category) %>% 
   summarise(prop = n()/nrow(tri_data)) %>% 
@@ -424,7 +436,6 @@ tri_data %>%
   coord_polar(theta = "y") +
   scale_fill_viridis_d(begin = 0.4, end = 0.9)
 ```
-
 
 For above visualizations: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
 
@@ -448,7 +459,7 @@ chemical_info %>%
   group_by(chemical)
 ```
 
-There are `sum(chemical_info$pfas == "YES")` observations of PFAS chemicals in the dataset.
+There are `r sum(chemical_info$pfas == "YES")` observations of PFAS chemicals in the dataset.
 
 ```{r pfas-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
@@ -457,7 +468,7 @@ chemical_info %>%
   group_by(chemical)
 ```
 
-There are `sum(chemical_info$pfas == "NO")` observations of non-PFAS chemicals in the dataset.
+There are `r sum(chemical_info$pfas == "NO")` observations of non-PFAS chemicals in the dataset.
 
 ```{r pfas-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
@@ -466,7 +477,7 @@ chemical_info %>%
   group_by(chemical)
 ```
 
-There are `sum(chemical_info$pbt == "YES")` observations of PBT chemicals in the dataset.
+There are `r sum(chemical_info$pbt == "YES")` observations of PBT chemicals in the dataset.
 
 ```{r pbt-percent-yes, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
@@ -475,7 +486,7 @@ chemical_info %>%
   group_by(chemical)
 ```
 
-There are `sum(chemical_info$pbt == "NO")` observations of non-PBT chemicals in the dataset.
+There are `r sum(chemical_info$pbt == "NO")` observations of non-PBT chemicals in the dataset.
 
 ```{r pbt-percent-no, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info %>% 
@@ -725,7 +736,6 @@ tri_data %>%
   scale_color_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
-
 
 ```{r industry-sector-category-water-release, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -1144,7 +1154,6 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-
 ### Chemical Release Trends by Year
 
 Note: Phosphorus is not faceted by industry sector because there is only one industry that uses it.
@@ -1355,7 +1364,6 @@ chemical_analysis_data %>%
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
 ```
-
 
 # Conclusion
 
