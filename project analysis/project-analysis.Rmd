@@ -34,8 +34,6 @@ library(lintr)
 ```{r data-read-in, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
-tri_data
-
 ```
 
 # Introduction
@@ -112,7 +110,7 @@ tri_data %>%
 
 ### Percent of Facilities on Tribal Land
 
-Though the percentage of facilities located on tribal land is less than 1% (there are `sum(facility_location$tribal_yes_no == "YES")` facilities on tribal land), and we are curious about any differences in the amount of chemicals used and released on tribal vs not tribal land.
+Though the percentage of facilities located on tribal land is less than 1% (there are `r sum(facility_location$tribal_yes_no == "YES")` facilities on tribal land), and we are curious about any differences in the amount of chemicals used and released on tribal vs not tribal land.
 
 ```{r percent-tribal-land, echo = FALSE, message = FALSE, warning = FALSE}
 facility_location %>% 
@@ -224,199 +222,6 @@ chemical_info %>%
   arrange(desc(percent))
 ```
 
-<<<<<<< HEAD
-=======
-### Chemical Category Calculations
-
-\~\~ why are these separate from the corresponding graphs???? FIX
-
-The large majority of chemicals used are not elemental metals or metals in general. About 63% are identified in the Clean Air Act, leaving 37% not present. Over 28% of chemicals used in these facilities are known to be carcinogenic, 17% are PBTs, and 0.02% are PFAS'. These smaller percentages are still a concern, and are in-part new variables to track. PFAS did not have to be reported to the TRI until 2020 (making this decade of data insufficient), even though over 2,000 facilities were known to be producing them before the regulation. Therefore, it has far fewer observations in comparison to other chemicals though used since the 1940s and known to cause certain cancers, impairment of the immune system, reproductive issues, and abnormal developmental effects. The reporting threshold for that particular subset of chemicals is 100 pounds per year.
-
-```{r chemical-percent-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE}
-chemical_info %>% 
-  select(elemental_metal_included) %>% 
-  group_by(elemental_metal_included) %>%
-  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
-  arrange(desc(percent))
-```
-
-```{r chemical-percent-pbt, echo = FALSE, message = FALSE, warning = FALSE}
-tri_data %>% 
-  select(pbt) %>% 
-  group_by(pbt) %>%
-  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
-  arrange(desc(percent))
-```
-
-```{r chemical-percent-pfas, echo = FALSE, message = FALSE, warning = FALSE}
-tri_data %>% 
-  select(pfas) %>% 
-  group_by(pfas) %>%
-  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
-  arrange(desc(percent))
-```
-
-#### Chemical Categories Graphs
-
-```{r chemical-trends-by-category-elemental-metal-included, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of elemental metals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of elemental metals with distinct colors indicating whether the chemicals used are or are not elemental metals. The large majority are not elemental metals, but the amount of elemental metals counted has been increasing slightly by year."}
-
-tri_data %>% 
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>%
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = elemental_metal_included, fill = elemental_metal_included)) +
-  geom_bar() +
-  labs(title = "Elemental Metal Prevalence by Year",
-       x = "Elemental Metal",
-       y = "Count",
-       fill = "Elemental Metal") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year) 
-```
-
-```{r chemical-percent-clean-air-act, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of Clean Air Act chemicals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of chemicals with distinct colors indicating whether they are or are not identified in the Clean Air Act. The large majority are in the act, but the amount of non-act chemicals counted has been increasing slightly by year."}
- 
-chemical_info %>% 
-  select(clean_air_act_chemical) %>% 
-  group_by(clean_air_act_chemical) %>%
-  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
-  arrange(desc(percent))
-
-chemical_info %>% 
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = clean_air_act_chemical, fill = clean_air_act_chemical)) +
-  geom_bar() +
-  labs(title = "Clean Air Act Chemical Prevalence by Year",
-       x = "Clean Air Act Chemical", 
-       y = "Count",
-       fill = "Clean Air Act Chemical") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year)
-```
-
-```{r chemical-percent-metal, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of metals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of metals with distinct colors indicating whether the chemicals used are or are not metals. Most of them are not metals, and the amount of metals and non-metals counted has been increasing by year."}
- 
-chemical_info %>% 
-  select(metal) %>% 
-  group_by(metal) %>%
-  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
-  arrange(desc(percent))
-
-tri_data %>%
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = metal, fill = metal)) +
-  geom_bar() +
-  labs(title = "Metal Prevalence by Year",
-       x = "Metal",
-       y = "Count",
-       fill = "Metal") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year) 
-```
-
-```{r chemical-percent-metal-category, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A faceted bar plot depicts the prevalence of metal categories used by U.S. facilities from 2011 to 2021, whether a non-metal, metal with qualifiers, metal compound, chemical possibly containing metal, indivudually-listed metal compound, or elemental metal. Each bar represents the count of these metal categories, sorted by year, with varied colors denoting distinct metal category types."}
-
-chemical_info %>% 
-  select(metal_category) %>% 
-  group_by(metal_category) %>%
-  summarise(percent = 100 * n()/nrow(tri_data)) %>% 
-  arrange(desc(percent))
-
-test <- tri_data %>%
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>%
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>%
-  ggplot(aes(x = metal_category, fill = metal_category)) +
-  geom_bar() +
-  labs(title = "Metal Category Prevalence by Year",
-       x = "Metal Category",
-       y = "Count",
-       fill = "Metal Category") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d() +
-  facet_wrap(~year)
-```
-
-```{r chemical-trends-by-category-carcinogen, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of carcinogens used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of carcinogenic substances, sorted by year, with varied colors indicating different carcinogen categories. The majority of chemicals used are non-carcinogenic."}
-chemical_info %>% 
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = carcinogen, fill = carcinogen)) +
-  geom_bar() +
-  labs(title = "Carcinogen Prevalence by Year",
-       x = "Carcinogenic",
-       y = "Count",
-       fill = "Carcinogenic") +
-  scale_y_discrete(limits=c(0,10)) +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year)
-```
-
-```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of PBTs used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of PBT substances, sorted by year, with different colors indicating whether a chemical is or is not a PBT. The large majority of chemicals used are non-PBTs, with the number of PBTs being relatively consistent by year."}
-
-chemical_info %>% 
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = pbt, fill = pbt)) +
-  geom_bar() +
-  labs(title = "PBT Prevalence by Year",
-       x = "PBT",
-       y = "Count",
-       fill = "PBT") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year) 
-```
-
-```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of PFAS chemicals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of PFAS substances, sorted by year, with different colors indicating whether a chemical is or is not a PFAS. The overarching majority of chemicals used are not PFAS, and PFAS data only appears for the years 2020 and 2021."}
-
-chemical_info %>% 
-  select(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  distinct(year, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
-  ggplot(aes(x = pfas, fill = pfas)) +
-  geom_bar() +
-  labs(title = "PFAS Prevalence by Year",
-       x = "PFAS",
-       y = "Count",
-       fill = "PFAS") +
-  theme_minimal() +
-  coord_flip() +
-  scale_fill_viridis_d(begin = 0.4, end = 1) +
-  facet_wrap(~year) 
-```
-
-##### Metal Category Pie Chart
-
-```{r metal-category-pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.alt = "A circular pie chart demonstrates the distribution of metal categories used by U.S. facilities in the dataset. Each segment of the pie represents a metal category with distinct colors, with the size proportional to the percentage of occurances. Non-metals make up 54% of the chart, and elemental metals make up 19% of the chart."}
-
-tri_data %>% 
-  group_by(metal_category) %>% 
-  summarise(prop = n()/nrow(tri_data)) %>% 
-  ggplot(aes(x = "", y = prop, fill = fct_inorder(metal_category))) +
-  geom_col(color = "white", linewidth = .3) +
-  geom_text(aes(x = "", y = prop, label = round(prop, 2)), position = position_stack(vjust = 0.5)) +
-  labs(title = "Metal Category Distribution",
-       x = "",
-       y = "", 
-       fill = "Metal Category") +
-  theme_void() +
-  coord_polar(theta = "y") +
-  scale_fill_viridis_d(begin = 0.4, end = 0.9)
-```
-
-For above visualizations: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
-
->>>>>>> af2aba2b3917f76fafa2e4b6d6a6895fb8639388
 ### Chemical Categories
 
 There are `r sum(chemical_info$carcinogen == "YES")` carcinogens being observed -- a large number creating a small percentage.
@@ -656,7 +461,6 @@ chemical_info %>%
 ```
 
 
-
 ## Pollution analysis
 
 From these distributions of observed chemicals, there is still the question of their disposal after use. With air, ground, and water being some possible points of disposal, we must assess the trends in these differing types of waste removal. In the past decade, what are these trends in pollution due to chemical release, whether on-site or off?
@@ -667,8 +471,6 @@ pollution_info <- tri_data %>%
 ```
 
 ### On-Site Pollution by Category
-
-#### By Type
 
 On-site release types: variables `Underground`, `Landfill`, and `Surface Impoundment` are all zero.
 
