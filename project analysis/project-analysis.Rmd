@@ -33,7 +33,6 @@ library(lintr)
 
 ```{r data-read-in, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
-
 ```
 
 # Introduction
@@ -62,7 +61,6 @@ facility_location <- facility_location %>%
 tri_data <- tri_data %>% 
   mutate(tribal_yes_no = case_when(is.na(tribal_land) == FALSE ~ "Tribal Land",
                                    TRUE ~ "Not Tribal Land"))
-
 ```
 
 ### Number of Facilities Owned by Each Company
@@ -70,13 +68,11 @@ tri_data <- tri_data %>%
 The five most common parent companies are as follows: U.S. Department of Defense, CRH Americas Inc, Cemex Inc, Argos U.S. Corp, and Berkshire Hathaway Inc. The first listed is a government agency responsible for U.S. military protection, followed by four different building/construction/transport materials companies.
 
 ```{r number-of-facilities-by-company, echo = FALSE, message = FALSE, warning = FALSE}
-
 tri_data %>% 
   select(standard_parent_co_name, parent_co_name, facility_name) %>% 
   group_by(standard_parent_co_name, parent_co_name) %>% 
   summarise(number_of_facilities = n_distinct(facility_name)) %>% 
   arrange(desc(number_of_facilities))
-
 ```
 
 ```{r number-of-facilities-by-state, echo = FALSE, message = FALSE, warning = FALSE}
@@ -309,7 +305,6 @@ tri_data %>%
 ```
 
 ```{r chemical-percent-clean-air-act, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of Clean Air Act chemicals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of chemicals with distinct colors indicating whether they are or are not identified in the Clean Air Act. The large majority are in the act, but the amount of non-act chemicals counted has been increasing slightly by year."}
- 
 chemical_info %>% 
   select(clean_air_act_chemical) %>% 
   group_by(clean_air_act_chemical) %>%
@@ -332,7 +327,6 @@ chemical_info %>%
 ```
 
 ```{r chemical-percent-metal, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot displays the prevalence of metals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of metals with distinct colors indicating whether the chemicals used are or are not metals. Most of them are not metals, and the amount of metals and non-metals counted has been increasing by year."}
- 
 chemical_info %>% 
   select(metal) %>% 
   group_by(metal) %>%
@@ -355,7 +349,6 @@ tri_data %>%
 ```
 
 ```{r chemical-percent-metal-category, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a faceted bar plot depicts the prevalence of metal categories used by U.S. facilities from 2011 to 2021, whether a non-metal, metal with qualifiers, metal compound, chemical possibly containing metal, indivudually-listed metal compound, or elemental metal. Each bar represents the count of these metal categories, sorted by year, with varied colors denoting distinct metal category types", "Plot 2 is a circular pie chart demonstrates the distribution of metal categories used by U.S. facilities in the dataset. Each segment of the pie represents a metal category with distinct colors, with the size proportional to the percentage of occurances. Non-metals make up 54% of the chart, and elemental metals make up 19% of the chart")}
-
 chemical_info %>% 
   select(metal_category) %>% 
   group_by(metal_category) %>%
@@ -392,7 +385,6 @@ tri_data %>%
 ```
 
 ```{r chemical-trends-by-category-carcinogen, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of carcinogens used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of carcinogenic substances, sorted by year, with varied colors indicating different carcinogen categories. The majority of chemicals used are non-carcinogenic."}
-
 chemical_info %>% 
   select(carcinogen) %>% 
   group_by(carcinogen) %>%
@@ -415,7 +407,6 @@ chemical_info %>%
 ```
 
 ```{r chemical-trends-by-category-pbt, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of PBTs used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of PBT substances, sorted by year, with different colors indicating whether a chemical is or is not a PBT. The large majority of chemicals used are non-PBTs, with the number of PBTs being relatively consistent by year."}
-
 chemical_info %>% 
   select(pbt) %>% 
   group_by(pbt) %>%
@@ -438,7 +429,6 @@ chemical_info %>%
 ```
 
 ```{r chemical-trends-by-category-pfas, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A grouped bar plot shows the prevalence of PFAS chemicals used in U.S. facilities categorized by year from 2011 to 2021. Each bar represents the count of PFAS substances, sorted by year, with different colors indicating whether a chemical is or is not a PFAS. The overarching majority of chemicals used are not PFAS, and PFAS data only appears for the years 2020 and 2021."}
-
 chemical_info %>% 
   select(pfas) %>% 
   group_by(pfas) %>%
@@ -766,6 +756,7 @@ chemical_analysis_data %>%
 ## Chemical Release Graphs
 
 ```{r chemical-category-graphs, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("For plot 1, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 categorized by whether or not they are persistent, bioaccumulative, and toxic (PBT). Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the PBT classification. Three of the eleven chosen chemicals are PBTs, and lead is the most commonly used PBT.", "For plot 2, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 by whether or not they are categorized as PFAS. Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the PFAS classification. None of the chosen chemicals are PFAS.", "For plot 3, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 by whether or not they are categorized as carcinogenic. Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the carcinogen classification. Six of the eleven chosen chemicals are carcinogens, with lead being the most commonly used carcinogen.", "For plot 4, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 by whether or not they are classified as Clean Air Act chemicals. Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the Act classification. Ammonia and lead are the only non-act chemicals in the chosen selection.")}
+
 chemical_analysis_data %>% 
   ggplot(aes(y = fct_infreq(chemical), fill = pbt)) +
   geom_bar() +
@@ -805,7 +796,8 @@ chemical_analysis_data %>%
 
 ### Graphs of on-site release by type
 
-```{r plot-fugitive-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-fugitive-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is futitive air release. Based on the visualization, Ammonia has the most fugitive air release of the 11 chemicals."}
+
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = fugitive_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -820,7 +812,8 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-stack-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-stack-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is stack air release. Based on the visualization, Ammonia has the most stack air release of the 11 chemicals."}
+
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = stack_air)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -835,7 +828,8 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-water-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-water-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is water release. Based on this visualization, Ammonia has the most water release of the 11 chemicals."}
+
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = water)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -850,7 +844,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-underground-class-1-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-underground-class-1-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is underground class 1 releases. Based on this visualization, Ammonia and Formaldehyde have the most underground class 1 release."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_1)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -865,7 +859,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-underground-2-to-5-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-underground-2-to-5-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is releases from underground classes 2 through 5. Based on this visualization, Ammonia has the most underground classes 2 through 5 releases."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = underground_class_2_through_5)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -880,7 +874,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-land-treatment-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-land-treatment-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is land treatment. Based on this visualization, Ammonia has the most land treatment."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = land_treatment)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -895,7 +889,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-other-disposal-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-other-disposal-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is other disposal. Based on the visualization, Lead and Ammonia have the most on site other disposal."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = other_disposal)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -910,7 +904,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-on-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-on-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A column graph of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is the 11 chemicals. Ammonia has the highest on site release total, follwed by Styrene and Formaldehyde."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_release_total, y = chemical, fill = chemical)) +
   geom_col() +
@@ -924,7 +918,7 @@ chemical_analysis_data %>%
 
 ### Graphs of on-site disposal by type
 
-```{r plot-on-site-contained-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-on-site-contained-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is on site total and the y axis is on site contained. Based on this visualization, Ammonia and Formaldehyde have the hightest on site containment."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_total, y = on_site_contained)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -939,7 +933,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-on-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-on-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is on site total and the y axis is on site other. Based on this visualization, Ammonia has the highest on site other."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_total, y = on_site_other)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -956,7 +950,7 @@ chemical_analysis_data %>%
 
 ### Graphs of off-site disposal by type
 
-```{r plot-public-treatment-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-public-treatment-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total transfered to public treatment. Based on this visualization, Formaldehyde and Ammonia are most frequently transfered for public treatment."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = public_treatment_total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -971,7 +965,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-release-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is the off site release total. Based on this visualization, Nickel, Lead, Chromium, and Ammonia have the highest off site release total."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_release_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -986,7 +980,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-recycled-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-recycled-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total recycled off site. Based on this visualization, Chromium and Nickel are most often recycled off site."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_recycled_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1001,7 +995,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-energy-recovery-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total energy recovered off site. Based on this visualization, Styrene has the highest energy recovery."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_energy_recovery_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1016,7 +1010,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-treated-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-treated-total-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total treated off site. Based on this visualization, Formaldehyde, Styrene, and Ammonia have the highest off site treated total."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_treated_total)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1031,7 +1025,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-total-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-total-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total transfered. Based on this visualization, Chromium and Nickel have the highest total transfers, though Lead does have one very high outlier."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_transfer)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1046,7 +1040,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-total-releases-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-total-releases-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total releases. Based on this visualization, Ammonia, Formaldehyde, and Lead have the highest total releases."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = total_releases)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1061,7 +1055,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-contain-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-contain-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is contained off site. Based on this visualization, Nickel, Chromium, Ammonia, Lead, and Formaldehyde have the most contained off site."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_contain)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1076,7 +1070,7 @@ chemical_analysis_data %>%
   facet_wrap(~ chemical)
 ```
 
-```{r plot-off-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plot-off-site-other-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is off site other. Based on this visualization, Lead and Ammonia have the highest on site other."}
 chemical_analysis_data %>% 
   ggplot(aes(x = off_site_total, y = off_site_other)) +
   geom_point(aes(alpha = 0.3, color = chemical)) +
@@ -1095,7 +1089,7 @@ chemical_analysis_data %>%
 
 Note: Phosphorus is not faceted by industry sector because there is only one industry that uses it.
 
-```{r on-site-total-by-year}
+```{r on-site-total-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A column graph of 11 chemicals used in the U.S between 2011 and 2021 faceted by year. This graph has chemical on the x axis and on site total on the y axis. From this visualization, Ammonia and Formaldehyde consistently have the highest on site total."}
 chemical_analysis_data %>% 
   ggplot(aes(x = chemical, y = on_site_total, fill = chemical)) +
   geom_col(position = "dodge") +
@@ -1110,7 +1104,7 @@ chemical_analysis_data %>%
   facet_wrap(~ year)
 ```
 
-```{r off-site-total-by-year}
+```{r off-site-total-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A column graph of 11 chemicals used in the U.S between 2011 and 2021 faceted by year. This graph has chemical on the x axis and off site total on the y axis. Based on this visualization, the off site total is low except for Lead in 2012."}
 chemical_analysis_data %>% 
   ggplot(aes(x = chemical, y = off_site_total, fill = chemical)) +
   geom_col(position = "dodge") +
@@ -1125,7 +1119,7 @@ chemical_analysis_data %>%
   facet_wrap(~ year)
 ```
 
-```{r arsenic-release-by-year}
+```{r arsenic-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a column graph of off site Arsenic in the U.S between 2011 and 2021 faceted by industry sector category. This graph has the year on the x axis and off site total on the y axis. The industry sector categories Chemicals and Waste and Machinery and Technology have the highest off site total. For Chemicals and Waste, it is highest in 2011 and has dropped significantly since then, with very little variation between 2015 and 2021. Machinery and Technology increased since 2011, peaked in 2018, and have declined since, with a significant dip in 2020.", "Plot 2 is a column graph of on site Arsenic in the U.S. between 2011 and 2021 faceted by industry sector category. This graph has the year on the x axis and the on site total on the y axis. Based on this graph, Chemicals and waste has the highest on site total, with significant spikes in 2011 and 2013 and falling to consistently low levels between 2014 and 2021 with a slight spike in 2018.")}
 chemical_analysis_data %>%
   filter(chemical == "Arsenic") %>%
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1138,9 +1132,22 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Arsenic") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Arsenic On Site Total",
+       subtitle = "Arsenic On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
-```{r styrene-release-by-year}
+```{r styrene-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a column graph of off site Styrene in the U.S. between 2011 and 2021 faceted by industry sector category. This graph has the year on the x axis and off site total on the y axis. The industry sector category Chemicals and Waste has the highest off site total, with spikes in 2014 and 2016.", "Plot 2 is a column graph of on site Styrene in the U.S. between 2011 and 2021 faceted by industry sector category. This graph has the year on the x axis and the on site total on the y axis. The industry sector categories Chemicals and Waste, Machinery and Technology, and Processed Materials consistently have the highest on site total. Chemicals and Waste has been mostly consistent, with spikes in 2011 and 2013. Machinery and Technology increased between 2011, peaked in 2018, and has declined since. Processed Materials has increased steadily since 2011 and has the highest on site total of these three industry sector categories.")}
 chemical_analysis_data %>% 
   filter(chemical == "Styrene") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1153,9 +1160,22 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Styrene") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Styrene On Site Total",
+       subtitle = "Styrene On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
-```{r formaldehyde-release-by-year}
+```{r formaldehyde-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a column graph of off site Formaldehyde in the U.S. between 2011 and 2021 faceted by industry sector category. This graph has the year on the x axis and the off site total on the y axis. Based on this graph, Chemicals and Waste has the highest off site total, slowly declining between 2011 and 2020 and then drastically spiking in 2021.", "Plot 2 is a column graph of on site Formaldehyde in the U.S. between 2011 and 2021 faceted by industry sector category. This graph has the year on the x axis and the on site total on the y axis. Based on this graph, Chemicals and Waste has an incredibly high on site total between 2011 and 2021. All other industry sector categories have very low to no on site total.")}
 chemical_analysis_data %>% 
   filter(chemical == "Formaldehyde") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1168,9 +1188,22 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Formaldehyde") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Formaldehyde On Site Total",
+       subtitle = "Formaldehyde On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
-```{r nickel-release-by-year}
+```{r nickel-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 shows a column graph of off site Nickel in the U.S. between 2011 and 2021 faceted by industry sector category. The year is on the x axis and the off site total is on the y axis. Based on this graph, Processed Materials consistently has the highest off site total. However, Machinery and Technology had a massive spike in 2011, drastically declined to consistantly low levels between 2012 and 2020, and then spiked slightly in 2021.", "Plot 2 shows a column graph of on site Nickel in the U.S. between 2011 and 2021 faceted by industry sector category. The year is on the x axis and the on site total is on the y axis. Based on this graph, Chemicals and Waste and Mining have the highest on site total. Chemicals and Waste had low levels between 2011 and 2015, had a massive spike in 2016 and has declined since, though has not reached pre-2015 levels. Mining has an overall consistently low on site total, but is significant when compared to most other industry sector categories.")}
 chemical_analysis_data %>% 
   filter(chemical == "Nickel") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1183,9 +1216,22 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Nickel") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Nickel On Site Total",
+       subtitle = "Nickel On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
-```{r chromium-release-by-year}
+```{r chromium-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a column graph of off site Chromium in the U.S. between 2011 and 2021 faceted by industry sector category. This plot has the year on the x axis and the off site total on the y axis. Based on this graph, Processed Materials had a steady increase from 2011 to 2020 before dropping in 2021. Machinery and Technology had a very high off site total in 2011, a slightly lower one in 2012, and then a very low off site total between 2013 and 2020 before spiking in 2021 to the same level it was in 2020.", "Plot 2 shows a column graph of on site Chromium in the U.S. between 2011 and 2021 faceted by industry sector category. The year is on the x axis and the on site total is on the y axis. This graph shows that Chemicals and Waste and Mining have the highest on site totals. Chemicals and Waste has a moderate on site total in 2011, drops to a low level from 2012 to 2014, increases steadily from 2015 to 2017 before peaking in 2018 and then dropping in 2019, 2020, and 2021. Mining climbs steadily from 2011 to 2014, dips in 2015, and then spikes in 2016 and has been declining since.")}
 chemical_analysis_data %>% 
   filter(chemical == "Chromium") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1213,7 +1259,7 @@ chemical_analysis_data %>%
   facet_wrap(~ industry_sector_category)
 ```
 
-```{r lead-release-by-year}
+```{r lead-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 shows a column graph of off site Lead in the U.S. between 2011 and 2021 faceted by industry sector category. This plot has the year on the x axis and the off site total on the y axis. Based on this graph, all industry sector categories have low off site totals, except for a massive spike in 2012 in Machinery and Technology.", "Plot 2 is a column graph of on site Lead in the U.S. between 2011 and 2021 faceted by industry sector category. This plot has the year on the x axis and the on site total on the y axis. This graph shows that Chemicals and Waste and Processed Materials consistently have the highest on site total. Chemicals and Waste has a big spike in 2011, drops between 2012 and 2014, and then increases in 2016, increases and then flattens in 2017 and 2018, and then declines between 2019 and 2021. Processed Materials begins with a high on site total, declines between 2011 and 2015, spikes in 2015 and has decreased since.")}
 chemical_analysis_data %>% 
   filter(chemical == "Lead") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1226,11 +1272,37 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Lead") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Lead On Site Total",
+       subtitle = "Lead On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
-```{r mercury-release-by-year}
+```{r mercury-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a column graph of off site Mercury in the U.S. between 2011 and 2021 faceted by industry sector category. The year is on the x axis and the off site total is on the y axis. Based on this graph, Chemicals and Waste has the highest off site total. It spikes from relatively low levels in 2013 and 2014 and has a massive spike in 2016.", "Plot 2 shows a column graph of on site Mercury in the U.S. between 2011 and 2021 faceted by industry sector category. The x axis is the year and the y axis is the on site total. The graph shows that Chemicals and Waste has the highest on site total, with consistently low levels and two massive spikes in 2014 and 2016.")}
 chemical_analysis_data %>%
   filter(chemical == "Mercury") %>%
+  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Mercury On Site Total",
+       subtitle = "Mercury On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Mercury") %>% 
   ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
   labs(title = "Mercury On Site Total",
@@ -1243,7 +1315,7 @@ chemical_analysis_data %>%
   facet_wrap(~ industry_sector_category)
 ```
 
-```{r ammonia-release-by-year}
+```{r ammonia-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 shows a column graph of off site Ammonia in the U.S. between 2011 and 2021 faceted by industry sector category. The year is on the x axis and the off site total is on the y axis. Based on this graph, Agriculture and Food Processing, Chemicals and Waste, Electric Utilities, and Processed Materials have the highest off site total. Agriculture and Food Processing, Electric Utilities, and Processed Materials each have consistently low or declining off site totals. Chemicals and Waste has consistently low levels except for significant spikes in 2012, 2014, and 2015.", , "Plot 2 is a column graph of on site Ammonia in the U.S. between 2011 and 2021 faceted by industry sector category. The x axis is the year and the y axis is the on site total. This graph shows that Chemicals and Waste has the highest on site total by a large margin, with a steady increase between 2011 and 2021 except for a drop in 2015. Agriculture and Food Processing and Processed Materials each have consistently low on site totals.")}
 chemical_analysis_data %>% 
   filter(chemical == "Ammonia") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1256,20 +1328,19 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
-```
 
-```{r phosphorus-release-by-year}
-chemical_analysis_data %>%
-  filter(chemical == "Phosphorus") %>%
-  ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
+chemical_analysis_data %>% 
+  filter(chemical == "Ammonia") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
   geom_col(position = "dodge", just = 0.5) +
-  labs(title = "Phosphorus Off Site Total",
-       subtitle = "Phosphorus Off Site Release, Storage, Treatment, and Disposal",
+  labs(title = "Ammonia On Site Total",
+       subtitle = "Ammonia On Site Release, Storage, and Disposal",
        x = "Year",
-       y = "Off Site Total",
-  fill = "Industry Sector Category") +
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
   theme_minimal() +
-  scale_fill_viridis_d()
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r chloroform-release-by-year}
@@ -1285,6 +1356,19 @@ chemical_analysis_data %>%
   theme_minimal() +
   scale_fill_viridis_d() +
   facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Chloroform") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Chloroform On Site Total",
+       subtitle = "Chloroform On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
 ```
 
 ```{r benzo[g,h,i]perylene-release-by-year}
@@ -1296,6 +1380,19 @@ chemical_analysis_data %>%
        subtitle = "Benzo[g,h,i]perylene Off Site Release, Storage, Treatment, and Disposal",
        x = "Year",
        y = "Off Site Total",
+       fill = "Industry Sector Category") +
+  theme_minimal() +
+  scale_fill_viridis_d() +
+  facet_wrap(~ industry_sector_category)
+
+chemical_analysis_data %>% 
+  filter(chemical == "Benzo[g,h,i]perylene") %>% 
+  ggplot(aes(x = year, y = on_site_total, fill = industry_sector_category)) +
+  geom_col(position = "dodge", just = 0.5) +
+  labs(title = "Benzo[g,h,i]perylene On Site Total",
+       subtitle = "Benzo[g,h,i]perylene On Site Release, Storage, and Disposal",
+       x = "Year",
+       y = "On Site Total",
        fill = "Industry Sector Category") +
   theme_minimal() +
   scale_fill_viridis_d() +
