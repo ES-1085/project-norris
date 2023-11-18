@@ -103,3 +103,8 @@ Cancer Data for Chemicals Listed Under EPCRA Section 313 <https://www.epa.gov/si
 Chronic (Non-Cancer) Toxicity Data for Chemicals Listed Under EPCRA Section 313 <https://www.epa.gov/sites/default/files/documents/hazard_chronic_non-cancer95.pdf>
 
 Factors to Consider When Using Toxics Release Inventory Data <https://ordspub.epa.gov/ords/guideme_ext/guideme/file/ry20_advanced_concepts.pdf>
+
+Tribal Land and Ownership Statuses: Overview and Selected Issues for Congress
+<https://crsreports.congress.gov/product/pdf/R/R46647>
+
+

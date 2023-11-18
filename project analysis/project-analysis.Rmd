@@ -37,9 +37,7 @@ tri_data <- read_csv("../data/tri_data.csv", show_col_types = FALSE)
 
 # Introduction
 
-The Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is due to the unexplained environment that informs the data.
-
-Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade of 2011-2021 goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially-close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. Some of these laws -- though not implying causation -- will be clarified where relevant in the code.
+Every year, new chemicals to be reported to the EPA are added to the TRI's list, which means the amount of chemical variables within this one decade of 2011-2021 goes from 513 reported chemicals to 545 reported chemicals which actually accounts for around 200 additions and many undocumented deletions of variables (not counting the 16 that were added to the dataset in 2011). Rules on what qualifies as the threshold for reporting also change as certain chemicals fall in and out of especially-close watch. Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all. Some of these laws -- though not implying causation -- will be clarified where relevant in the code. It is important to note that the Environmental Protection Agency's database of Toxic Release Inventory lacks consistency in its observations and variables -- though this is likely due to the unexplained environment that informs the data.
 
 Our goal is to use what data we find (that is reasonably accurate given the circumstances) in order to identify the layout of these waste chemicals across the United States. To reach this, we must ask some guiding questions: What are the relationships between differing industry sectors and their growing or declining locations? Are there any shifts in the levels of overall pollution during the past decade, and are these changes set in any specific part of the country? Finally, how has chemical use and waste (as well as waste procedures) changed in the past decade, and what do we know about these chemicals from the EPA to infer their threat to human health?
 
@@ -65,7 +63,9 @@ tri_data <- tri_data %>%
 
 ### Number of Facilities Owned by Each Company
 
-The five most common parent companies are as follows: U.S. Department of Defense, CRH Americas Inc, Cemex Inc, Argos U.S. Corp, and Berkshire Hathaway Inc. The first listed is a government agency responsible for U.S. military protection, followed by four different building/construction/transport materials companies.
+The five most common parent companies are as follows: U.S. Department of Defense, CRH Americas Inc, Cemex Inc, Argos U.S. Corp, and Berkshire Hathaway Inc. The first listed is a government agency responsible for U.S. military protection, followed by four different building/construction/transport materials companies. However, given the high number of NA values in the `standard_parent_co_name` and `parent_co_name` variables, it is hard to know if these numbers are accurate. 
+
+We also calculated the states with the most reported chemicals and facilities. Texas, Ohio, Illinois, Pennsylvania, and California had the most reported chemicals, while Texas, Ohio, California, Pennsylvania, and Illinois had the most facilities. We found it interesting that the same states make up the top five in each calculation, with the only change being where California and Illinois are ranked.
 
 ```{r number-of-facilities-by-company, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -91,7 +91,7 @@ tri_data %>%
 
 ### Map of Facilities
 
-The large majority of facilities in this dataset are located in North America, but a significant number of U.S.-owned facilities are strewn across the global map in other territories -- possibly shifting any inferences that can be made on the state of pollution solely in the U.S.
+The large majority of facilities in this dataset are located in North America, but a significant number of U.S.-owned facilities are strewn across the global map in other U.S. territories -- possibly shifting any inferences that can be made on the state of pollution solely in the U.S.
 
 ```{r facility-map, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "An interactive map displaying distinct U.S.-owned facility locations. Each point represents a facility and includes information such as facility name, parent company, industry sector, city, and state. 31,594 points are located in North America, and 127 are in other territories."}
 tri_data %>% 
@@ -126,7 +126,7 @@ We can take points from history and U.S. law, knowing that tribes of the America
 
 ## Industry Analysis
 
-Within these observations of location, there is the question of each facility's purpose. Condensing the purpose of a factory into just 11 categories, their individual patterns of location, chemical use, and pollution can be tracked. This prevalence allows us to ask: is there a correlation between an industry's sector and their frequency of chemicals? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'?
+Within these observations of location, there is the question of each facility's purpose. By condensing the purpose of a factory into just 10 categories, we made it easier to analyze their individual patterns of location, chemical use, and pollution. This allows us to ask: is there a correlation between industry sector and frequency of chemical use? Further, their frequency of specific types of chemicals -- carcinogens, PFAS', and PBT'?
 
 ```{r industry-sector-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 industry_info <- tri_data %>% 
@@ -150,7 +150,7 @@ tri_data <- tri_data %>%
 
 ### Industry Sector Distribution
 
-The most common purpose of a U.S. facility is dealing with the production, waste, and wholesales of chemicals, accounting for almost 30% of U.S. industries as shown in the table. The least common accounting for about 0.4% is textile production which makes sense given trends in American imports.
+The most common purpose of a U.S. facility is dealing with the production, waste, and wholesales of chemicals, accounting for almost 30% of U.S. industries as shown in the table. The least common accounting for about 0.4% is textile production, and we wonder if this is because of trends in American imports.
 
 ```{r industry-sector-category-distribution, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A bar plot visualizes the distribution of industry sector categories in the Toxic Release Inventory (TRI). The plot displays the count of different industry sectors, with each bar representing a specific category. Chemical waste is the most prevalent sector, and textiles the least."}
 
@@ -174,7 +174,7 @@ tri_data %>%
 
 ### Carcinogen Percentage by Industry Sector Graph
 
-Understandably fitting with the most common industry sector, the chemical-producing facilities (and processed materials) also use the most carcinogens (non-comprehensive), but the frequency seems to almost consistently grow with the prevalence of these sectors besides the food industry. That being said, every sector listed has a chemical usage that is majority non-carcinogenic.
+Understandably, fitting with the most common industry sector, the chemical-producing facilities (and processed materials) also use the most carcinogens (non-comprehensive), but the frequency seems to almost consistently grow with the prevalence of these sectors besides the food industry. That being said, every sector listed has a chemical usage that is majority non-carcinogenic.
 
 ```{r industry-sector-and-carcinogen-use, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A bar plot illustrates the distribution of carcinogen use across various industry sectors. Each bar represents an industry sector's prevalence, differentiated by the presence or absence of carcinogens, denoted by different fill colors. Every category uses mostly non-carcinogens, with the highest amount of carcinogens used in chemical and processing industries."}
 
@@ -191,13 +191,15 @@ tri_data %>%
 
 ## Chemical Analysis
 
-Honing our observational questions down to just chemical trends of use and disposal now, we see how the laws of the EPA inform chemical procedures. Specifically in terms of the Clean Air Act, is there a differing correlation between the location and frequency of these specially-listed chemicals when compared to chemicals not listed on the Clean Air Act? And more broadly, is there any type, category, or closely-watched category of chemical that is most common despite the efforts of these laws?
+Honing our observational questions down to just chemical trends of use and disposal now, we see how the laws of the EPA inform chemical procedures. Specifically in terms of the Clean Air Act, is there a differing correlation between the location and frequency of these specially-listed chemicals when compared to chemicals not listed on the Clean Air Act? And more broadly, is there any type, category, or closely-watched category of chemical that is most common despite the efforts of these laws? While these are all questions that we are interested in exploring, we found that many of them are beyond the scope of the information included in this dataset. 
 
 ```{r chemical-info-dataset, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_info <- tri_data %>% 
   select(year, chemical, elemental_metal_included, clean_air_act_chemical, metal, metal_category, carcinogen, pbt, pfas) %>% 
   arrange(chemical)
 ```
+
+We found this table of the number of chemicals tracked each year very interesting, especially because we know that chemicals are added and taken out every year. We are curious about how these decisions are made and especially about the drop from 546 to 545 between 2020 and 2021, especially because EPA documentation shows that there were dozens of chemicals added to the TRI in 2020.
 
 ```{r chemical-count-by-year, echo = FALSE, message = FALSE, warning = FALSE}
 tri_data %>% 
@@ -219,6 +221,8 @@ chemical_info %>%
 ```
 
 ### Chemical Categories
+
+These calculations show the number of carcinogens, PFAS, and PBTs observed in this dataset. For additional detail and comprehension, we decided to create tibbles that listed each chemical and whether they are or aren't a carcinogen, PFAS, or PBT. 
 
 There are `r sum(chemical_info$carcinogen == "YES")` carcinogens being observed -- a large number creating a small percentage.
 
@@ -276,8 +280,8 @@ chemical_info %>%
 
 ### Chemical Category Calculations
 
-The large majority of chemicals used are not elemental metals or metals in general. About 63% are identified in the Clean Air Act, leaving 37% not present. Over 28% of chemicals used in these facilities are known to be carcinogenic, 17% are PBTs, and 0.02% are PFAS'. These smaller percentages are still a concern, and are in-part new variables to track. PFAS did not have to be reported to the TRI until 2020 (making this decade of data insufficient), even though over 2,000 facilities were known to be producing them before the regulation. Therefore, it has far fewer observations in comparison to other chemicals though used since the 1940s and known to cause certain cancers, impairment of the immune system, reproductive issues, and abnormal developmental effects. The reporting threshold for that particular subset of chemicals is 100 pounds per year.
 
+The large majority of chemicals used are not elemental metals or metals in general. About 63% are identified in the Clean Air Act, leaving 37% not present. Over 28% of chemicals used in these facilities are known to be carcinogenic, 17% are PBTs, and 0.02% are PFAS'. These smaller percentages are still a concern, and are in-part new variables to track. PFAS did not have to be reported to the TRI until 2020 (making this decade of data insufficient), even though over 2,000 facilities were known to be producing them before the regulation. Therefore, it has far fewer observations in comparison to other chemicals though used since the 1940s and known to cause certain cancers, impairment of the immune system, reproductive issues, and abnormal developmental effects. The reporting threshold for that particular subset of chemicals is 100 pounds per year.
 
 For the visualizations below: elemental metals (some harmless, some causing neurotoxicity) keep a near-consistent distribution in the chemical data. The few increases this type of metal makes in the data is adjusted by the many additions of tracked chemicals in the dataframe, also causing the count for non-elemental-metals to increase. A similar state of increase goes for the amount of Clean Air Act chemicals and their growing amendments (still with more Clean Air Act chemicals than not) and with the general metals graph (more non-metals than metals, though both counts increasing). The amount of PBTs remains consistent with the non-PBTs increasing with new variables, and our two years of PFAS data show their consistency -- though, of course, not much judgement can be made through this small piece of information, and the same must go for much of these environmentally-altered graphs.
 
@@ -462,7 +466,7 @@ pollution_info <- tri_data %>%
 
 ### On-Site Pollution by Category
 
-On-site release types: variables `Underground`, `Landfill`, and `Surface Impoundment` are all zero.
+We created graphs for each of the on-site release types, however, `Underground`, `Landfill`, and `Surface Impoundment` are entirely zeros so we did not create plots of them. 
 
 ```{r pollution-by-on-site-release-fugitive-air, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A smoothed scatter plot visualizes the relationship between fugitive air releases and on-site release totals of chemicals used in U.S. facilities from 2011 to 2021. Each point represents a data observation, and most years show a steep decline in fugitive air release with larger on-site release."}
 pollution_info %>% 
@@ -543,7 +547,7 @@ pollution_info %>%
 
 ### Pollution by General Category (Including On-site-total)
 
-Pollution variable `Releases` is all zeros.
+We also decided to create graphs of the other pollution and release types, including the on site total. The `Releases` column is also all zeros, so it was not included in any of the visualizations. 
 
 ```{r pollution-by-general-category, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A line plot visualizes the trend in on-site release totals of chemicals from U.S. facilities from 2011 to 2021. The line represents a smoothed curve depicting the change in on-site releases over the specified period. The on-site releases slowly decline over the decade."}
 pollution_info %>% 
@@ -678,6 +682,8 @@ tri_data %>%
 
 # Detailed Analysis
 
+We elected to select 11 chemicals that include a mix of carcinogens, PBTs, clean air act chemicals, and metals for a more detailed analysis. This allowed us to create more specific pollution and release graphs, as well as create visualizations for the prevalence of these chemicals on tribal lands. We also looked at how many of these chemicals are used in each state, and found that 28 states have used all 11 chemicals between 2011 and 2021. It is important to note that we chose phosphorus because we find it to be an intriguing chemical (it is only manufactured at reportable levels in one facility), however, because it is infrequently used, it did not show up in many of our analyses. 
+
 ```{r create-analysis-data-frame, echo = FALSE, message = FALSE, warning = FALSE}
 chemical_analysis_data <- tri_data %>% 
   filter(chemical %in% c("Arsenic", "Styrene", "Formaldehyde", "Nickel", "Chromium", "Lead", "Mercury", "Ammonia", "Phosphorus (yellow or white)", "Chloroform", "Benzo[g,h,i]perylene")) 
@@ -755,6 +761,8 @@ chemical_analysis_data %>%
 
 ## Chemical Release Graphs
 
+We created several chemical release graphs to help us further understand the pollution trends of the 11 chemicals we chose. This allowed us to visualize each of the chemicals by on site release type, off site disposal type, and off site disposal type by year and industry sector category. 
+
 ```{r chemical-category-graphs, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("For plot 1, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 categorized by whether or not they are persistent, bioaccumulative, and toxic (PBT). Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the PBT classification. Three of the eleven chosen chemicals are PBTs, and lead is the most commonly used PBT.", "For plot 2, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 by whether or not they are categorized as PFAS. Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the PFAS classification. None of the chosen chemicals are PFAS.", "For plot 3, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 by whether or not they are categorized as carcinogenic. Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the carcinogen classification. Six of the eleven chosen chemicals are carcinogens, with lead being the most commonly used carcinogen.", "For plot 4, a bar plot illustrates the frequency of eleven different chemicals used in U.S. faciltiies from 2011 to 2021 by whether or not they are classified as Clean Air Act chemicals. Each bar represents a chemical, and the color distinction indicates whether the chemical falls under the Act classification. Ammonia and lead are the only non-act chemicals in the chosen selection.")}
 
 chemical_analysis_data %>% 
@@ -795,6 +803,8 @@ chemical_analysis_data %>%
 ```
 
 ### Graphs of on-site release by type
+
+These plots allowed us to visualize the trends in on site releases. From this dataset, Ammonia has very high rates of on-site-release, and we are curious to know if that is because of its frequency of use, the type of chemical that it is, or the ways it is used. 
 
 ```{r plot-fugitive-air-release-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is the on site release total and the y axis is futitive air release. Based on the visualization, Ammonia has the most fugitive air release of the 11 chemicals."}
 
@@ -918,6 +928,8 @@ chemical_analysis_data %>%
 
 ### Graphs of on-site disposal by type
 
+These graphs look at on site disposal, distinct from on site release. For both of these visualizations, Ammonia is one of the most prevalent chemicals, however, Formaldehyde is also prevalent in on site containment.
+
 ```{r plot-on-site-contained-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is on site total and the y axis is on site contained. Based on this visualization, Ammonia and Formaldehyde have the hightest on site containment."}
 chemical_analysis_data %>% 
   ggplot(aes(x = on_site_total, y = on_site_contained)) +
@@ -949,6 +961,8 @@ chemical_analysis_data %>%
 ```
 
 ### Graphs of off-site disposal by type
+
+We created these graphs to look at the off site disposal by chemical to see if the trends were any different. While Ammonia is present in many of them, it is not nearly as prevalent as it was in on site release and disposal. Instead, we see more of our chemicals represented: Ammonia (6), Lead (3), Formaldehyde (4), Nickel (4), Chromium (4). Styrene is seen as the most prevalent in one of the graphs. However, we found that Chloroform, Benzo[g,h,i]perylene, and Arsenic were not particularly prevalent in any of these graphs, leading us to wonder if they are infrequently used or if we should consider adjusting our methods in the future. 
 
 ```{r plot-public-treatment-transfer-by-chemical, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A scatter plot of 11 chemicals used in U.S. facilities from 2011 to 2021 faceted by chemical. The x axis is off site total and the y axis is total transfered to public treatment. Based on this visualization, Formaldehyde and Ammonia are most frequently transfered for public treatment."}
 chemical_analysis_data %>% 
@@ -1087,7 +1101,7 @@ chemical_analysis_data %>%
 
 ### Chemical Release Trends by Year
 
-Note: Phosphorus is not faceted by industry sector because there is only one industry that uses it.
+The last group of plots is chemical release trends by year. The first two plots look at on and off site release total, faceted by year. Then, we created one faceted plot for each chemical, looking at the amount of on and off site release per year and faceting by industry sector category. Note: Phosphorus does not have an individual faceted graph because it is only created by one facility.  
 
 ```{r on-site-total-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "A column graph of 11 chemicals used in the U.S between 2011 and 2021 faceted by year. This graph has chemical on the x axis and on site total on the y axis. From this visualization, Ammonia and Formaldehyde consistently have the highest on site total."}
 chemical_analysis_data %>% 
@@ -1343,7 +1357,7 @@ chemical_analysis_data %>%
   facet_wrap(~ industry_sector_category)
 ```
 
-```{r chloroform-release-by-year}
+```{r chloroform-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 is a column graph of off site Chloroform in the U.S. between 2011 and 2021 faceted by industry sector category. The x axis is the year and the y axis is the off site total. This graph shows that Chemicals and Waste is the industry sector witht the highest off site total, climbing between 2011 and 2013, dropping in 2014, and steadily rising since.", "Plot 2 shows a column graph of on site Chloroform in the U.S. between 2011 and 2021 faceted by industry sector catefory. The x axis is the year and the y axis is the on site total. This graph shows that Wood and Paper and Agriculture and Food Processing both have low on site totals between 2011 and 2021. Chemicals and Waste has a low on site total except for significant spikes in 2016 and 2017.")}
 chemical_analysis_data %>% 
   filter(chemical == "Chloroform") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1371,7 +1385,7 @@ chemical_analysis_data %>%
   facet_wrap(~ industry_sector_category)
 ```
 
-```{r benzo[g,h,i]perylene-release-by-year}
+```{r benzo[g,h,i]perylene-release-by-year, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = c("Plot 1 shows a column graph of off site Benzo[g,h,i]perylene in the U.S. between 2011 and 2021 faceted by industry sector category. The year is on the x axis and the off site total is on the y axis. Based on the graph, Petroleum has the highest off site total, which is generally low except for a moderate spike in 2014 and a massive spike in 2017.", "Plot 2 is a column graph of on site Benzo[g,h,i]perylene in the U.S. between 2011 and 2021 faceted by industry sector category. The x axis is the year and the y axis is the on site total. The graph shows that Chemicals and Waste and Processed Materials have the highest on site totals. Chemicals and waste is inconsistent, with the highest on site totals in 2012 and 2016. Processed materials has a generally low on site total with two almost even spikes in 2012 and 2013.")}
 chemical_analysis_data %>% 
   filter(chemical == "Benzo[g,h,i]perylene") %>% 
   ggplot(aes(x = year, y = off_site_total, fill = industry_sector_category)) +
@@ -1401,4 +1415,4 @@ chemical_analysis_data %>%
 
 # Conclusion
 
-In recognizing the increase of observations, increase in pollution trends, and the environment of increasingly strict reporting laws, we must be careful not to make the assumption that pollution is truly on the rise, and that conditions are getting worse in general. What the legal environment shows is an increase in control and recognition of needed chemical regulations. What the work shows is a very actively polluted environment irregardless of these laws, and the continued prevalence of chemicals that are known to have been used as weapons of war and for body-preservation and alteration -- clearly harmful to human health. This is not to say that there is no improvement, but that there surely is much more that must be done.
+In recognizing the increase of observations, increase in pollution trends, and the environment of increasingly strict reporting laws, we must be careful not to make the assumption that pollution is truly on the rise, and that conditions are getting worse in general. What the legal environment shows is an increase in control and recognition of needed chemical regulations. What the work shows is a very actively polluted environment irregardless of these laws, and the continued prevalence of chemicals that are known to have been used as weapons of war and for body-preservation and alteration -- clearly harmful to human health. This is not to say that there is no improvement, but that there surely is much more that must be done. 
