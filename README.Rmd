@@ -26,18 +26,18 @@ Rules on what qualifies as the threshold for reporting also change as certain ch
 Countrywide and statewide laws on environmental protection grant even more opportunity for data to drastically change year by year, though in technicality, the actual happenings at these facilities may not be changing much at all.
 
 That TRI does not accurately tell us how many facilities are in the country, the extent of human health effects of chemicals, every source of pollution, nor how many chemicals a facility uses!
-The TRI reporting forms must be filled out by owners and operators of facilities that meet the following three criteria, but they are not required to if they don't meet all three: - The facility falls within a TRI-covered industry sector or is federally-owned or operated; - The facility has 10 or more full-time employee equivalents; and - The facility manufactures (including import) or processes more than 25,000 pounds or otherwise uses more than 10,000 pounds of a TRI-listed chemical during a calendar year.
+The TRI reporting forms must be filled out by owners and operators of facilities that meet the following three criteria, but they are not required to if they don't meet all three: a) the facility falls within a TRI-covered industry sector or is federally-owned or operated; b) the facility has 10 or more full-time employee equivalents; and c) the facility manufactures (including import) or processes more than 25,000 pounds or otherwise uses more than 10,000 pounds of a TRI-listed chemical during a calendar year.
 Note that a lower reporting threshold applies to some TRI chemicals: a threshold of 10 or 100 pounds applies to "chemicals of special concern" (e.g., persistent bioaccumulative toxic (PBT) chemicals); a threshold of 0.1 gram applies to the dioxin and dioxin-like compounds category; and a threshold of 100 pounds applies to Per- and Polyfuoroalkyl Substances (PFAS).
 
-A few important terms for our analysis are: - Clean Air Act (a federal air pollution law from 1963 that has been consistently amended to add regulations to chemical emissions that harm human health and the environment/ozone. This does not mean that the non-act chemicals are not harmful, but that they are differently managed/regulated than the act chemicals) - PFAS (Per- and Polyfuoroalkyl Substances. According to the EPA, PFAS have been in use since the 1940s and have been shown to have a variety of adverse effects on humans and the environment. PFAS are found in drinking water, food, packaging, personal care products, and water and soil near waste sites. Some effects on humans include decreased fertility, developmental effects and delays, increased risk of certain types of cancer, and reduced immune function) - PBTs (persistantm bioaccumulative toxics) - Carcinogenic (refers to chemicals that are linked to the onset of different cancers. Only chemicals that are undoubtedly proven to have a strong link are in the YES category, so even chemicals that have a "likely-carcinogenic" status or "possibly-carcinogenic" are in the NO category, so it isn't surely accurate)
+A few important terms for our analysis are: a) Clean Air Act (a federal air pollution law from 1963 that has been consistently amended to add regulations to chemical emissions that harm human health and the environment/ozone. This does not mean that the non-act chemicals are not harmful, but that they are differently managed/regulated than the act chemicals) b) PFAS (Per- and Polyfuoroalkyl Substances. According to the EPA, PFAS have been in use since the 1940s and have been shown to have a variety of adverse effects on humans and the environment. PFAS are found in drinking water, food, packaging, personal care products, and water and soil near waste sites. Some effects on humans include decreased fertility, developmental effects and delays, increased risk of certain types of cancer, and reduced immune function) c) PBTs (persistantm bioaccumulative toxics) d) Carcinogenic (refers to chemicals that are linked to the onset of different cancers. Only chemicals that are undoubtedly proven to have a strong link are in the YES category, so even chemicals that have a "likely-carcinogenic" status or "possibly-carcinogenic" are in the NO category, so it isn't surely accurate)
 
 We broke our project into two broad sections: data overview and detailed analysis.
 The data overview was further segmented into Location, Industry, Chemical, and Pollution analyses.
-- The Location section included a map with all reported facilities, the number of facilities per state, number of facilities located on and off tribal land (and the percentage they make up), and the number of chemical reports per state.
-- Our Industry analysis grouped the 30 industry sectors included in this dataset into 10 categories for easier analysis.
+The Location section included a map with all reported facilities, the number of facilities per state, number of facilities located on and off tribal land (and the percentage they make up), and the number of chemical reports per state.
+Our Industry analysis grouped the 30 industry sectors included in this dataset into 10 categories for easier analysis.
 Then, we we looked at industry category distribution and the amount of carcinogens used in each category.
-- For the Chemical analysis, we looked at the number of chemicals included in the TRI each year, the distribution of each chemical (the 5 most used chemicals are Lead (5.24%), Lead compounds (3.91%), Zinc compounds (3.79%), Nickel (3.17%), and Copper (3.08%)), and the distribution of each chemical type (Elemental Metal, Clean Air Act Chemical, Metal, Metal Category, Carcinogen, PBT, PFAS).
-- Pollution analysis was the longest section in the data overview.
+For the Chemical analysis, we looked at the number of chemicals included in the TRI each year, the distribution of each chemical (the 5 most used chemicals are Lead (5.24%), Lead compounds (3.91%), Zinc compounds (3.79%), Nickel (3.17%), and Copper (3.08%)), and the distribution of each chemical type (Elemental Metal, Clean Air Act Chemical, Metal, Metal Category, Carcinogen, PBT, PFAS).
+Pollution analysis was the longest section in the data overview.
 It includes sections with graphs of on site pollution by type and faceted by year and by general on and off site pollution and release by year.
 
 We selected 11 chemicals for our detailed analysis (Arsenic, Styrene, Formaldehyde, Nickel, Chromium, Lead, Mercury, Ammonia, Phosphorus (yellow or white), Chloroform, and Benzo[g,h,i]perylene).
@@ -57,19 +57,15 @@ Overall, we found that pollution and releases decreased between 2011 and 2021, 7
 Broadly, we found that many types of pollution and release decreased between 2011 and 2021, however, we were not able to analyze why.
 The most significant conclusion that we came to is that this is an incredibly complex issue that ideally needs multiple datasets and much longer than 5 weeks to fully analyze for any substantial conclusions.
 
-The limitations of this dataset include: - Over 6000 of the facilities in our dataset had missing values for the parent company and standard parent company names.
-- PFAS data only started being monitored in 2020 so we only have 2 years of data to account for in this decade.
-It is a known subset of chemicals, but not one that contains the amount of accurate and consistent data that we would need.
-- Not all industry sectors are listed in this dataset.
-There are over 30, but as with every variable there are requirements and limitations for what is accepted into the data frame.
-- The information on tribal land is similarly limited.
-- We mentioned that the facilities are not all shown because they have to meet chemical thresholds, but some also are not shown because of the type of facility they are if private or U.S. owned but outside of North America --- the information there is very limited because it's not easily or legally federally regulated.
+The limitations of this dataset include: a) over 6000 of the facilities in our dataset had missing values for the parent company and standard parent company names; b) PFAS data only started being monitored in 2020 so we only have 2 years of data to account for in this decade (It is a known subset of chemicals, but not one that contains the amount of accurate and consistent data that we would need); c) not all industry sectors are listed in this dataset (There are over 30, but as with every variable there are requirements and limitations for what is accepted into the data frame): d) the information on tribal land is similarly limited; e) we mentioned that the facilities are not all shown because they have to meet chemical thresholds, but some also are not shown because of the type of facility they are if private or U.S. owned but outside of North America (the information there is very limited because it's not easily or legally federally regulated).
+
 With more time and data, we would love to analyze the timing of regulation and chemical controls and how that impacts pollution and releases, the prevalence of chemicals used in each state, the reporting threshold, and PFAS use before 2020.
 We would also have loved to go more in depth with the differences of facilities and chemical use on and off tribal land, specific health and environmental effects, and potentially analyzing all the data the TRI has collected.
 
 ## Presentation
 
-Our presentation can be found [here](presentation/toxic_release_data_slides.pdf). However, it is a PDF file so it may not open in the source editor. 
+Our presentation can be found [here](presentation/toxic_release_data_slides.pdf).
+However, it is a PDF file so it may not open in the source editor.
 
 ## Data
 
@@ -104,7 +100,4 @@ Chronic (Non-Cancer) Toxicity Data for Chemicals Listed Under EPCRA Section 313 
 
 Factors to Consider When Using Toxics Release Inventory Data <https://ordspub.epa.gov/ords/guideme_ext/guideme/file/ry20_advanced_concepts.pdf>
 
-Tribal Land and Ownership Statuses: Overview and Selected Issues for Congress
-<https://crsreports.congress.gov/product/pdf/R/R46647>
-
-
+Tribal Land and Ownership Statuses: Overview and Selected Issues for Congress <https://crsreports.congress.gov/product/pdf/R/R46647>
